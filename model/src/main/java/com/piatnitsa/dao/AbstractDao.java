@@ -1,14 +1,13 @@
 package com.piatnitsa.dao;
 
-import com.piatnitsa.exception.DaoException;
-
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
 
 /**
- * This class is implementation of CRD<T> interface
+ * This class is implementation of {@link CRDDao} interface
  * and represents basic tools for work with database tables.
  * @param <T> type of entity.
  *
@@ -27,7 +26,7 @@ public abstract class AbstractDao<T> implements CRDDao<T> {
 
     @Override
     public Optional<T> getById(long id) {
-        return Optional.of(entityManager.find(entityType, id));
+        return Optional.ofNullable(entityManager.find(entityType, id));
     }
 
     @Override
@@ -37,13 +36,15 @@ public abstract class AbstractDao<T> implements CRDDao<T> {
     }
 
     @Override
-    public T insert(T item) throws DaoException {
+    @Transactional
+    public T insert(T item) {
         entityManager.persist(item);
         return item;
     }
 
     @Override
-    public void removeById(long id) throws DaoException {
+    @Transactional
+    public void removeById(long id) {
         T entity = entityManager.find(entityType, id);
         entityManager.remove(entity);
     }
