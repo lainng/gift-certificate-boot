@@ -1,7 +1,5 @@
 package com.piatnitsa.dao;
 
-import com.piatnitsa.exception.DaoException;
-
 /**
  * This interface describes CRUD operations for working with database tables.
  * @param <T> type of entity.
