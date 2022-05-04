@@ -46,15 +46,17 @@ public class TagDaoImpl extends AbstractDao<Tag> implements TagDao {
         );
 
         criteriaQuery.select(root).where(predicates.toArray(new Predicate[0]));
-        String sortType = params.get("tag_name_sort").toLowerCase();
-        switch (sortType) {
-            case "asc": {
-                criteriaQuery.orderBy(criteriaBuilder.asc(root.get("name")));
-                break;
-            }
-            case "desc": {
-                criteriaQuery.orderBy(criteriaBuilder.desc(root.get("name")));
-                break;
+        if (params.containsKey("tag_name_sort")) {
+            String sortType = params.get("tag_name_sort").toLowerCase();
+            switch (sortType) {
+                case "asc": {
+                    criteriaQuery.orderBy(criteriaBuilder.asc(root.get("name")));
+                    break;
+                }
+                case "desc": {
+                    criteriaQuery.orderBy(criteriaBuilder.desc(root.get("name")));
+                    break;
+                }
             }
         }
         return entityManager.createQuery(criteriaQuery)
