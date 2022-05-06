@@ -8,6 +8,7 @@ import com.piatnitsa.exception.IncorrectParameterException;
 import com.piatnitsa.service.AbstractService;
 import com.piatnitsa.service.GiftCertificateService;
 import com.piatnitsa.service.TimestampHandler;
+import com.piatnitsa.validator.FilterParameterValidator;
 import com.piatnitsa.validator.GiftCertificateValidator;
 import com.piatnitsa.validator.IdentifiableValidator;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -92,6 +93,7 @@ public class GiftCertificateServiceImpl extends AbstractService<GiftCertificate>
 
     @Override
     public List<GiftCertificate> doFilter(Map<String, String> params) {
+        FilterParameterValidator.validateSortType(params);
         return certificateDao.getWithFilter(params);
     }
 
