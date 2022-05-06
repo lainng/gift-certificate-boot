@@ -5,12 +5,9 @@ import com.piatnitsa.dao.TagDao;
 import com.piatnitsa.entity.GiftCertificate;
 import com.piatnitsa.entity.Tag;
 import com.piatnitsa.exception.IncorrectParameterException;
-import com.piatnitsa.exception.IncorrectParameterMessageCodes;
 import com.piatnitsa.service.AbstractService;
-import com.piatnitsa.service.FilterParameter;
 import com.piatnitsa.service.GiftCertificateService;
 import com.piatnitsa.service.TimestampHandler;
-import com.piatnitsa.validator.FilterParameterValidator;
 import com.piatnitsa.validator.GiftCertificateValidator;
 import com.piatnitsa.validator.IdentifiableValidator;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,7 +29,7 @@ public class GiftCertificateServiceImpl extends AbstractService<GiftCertificate>
     }
 
     @Override
-    public GiftCertificate insert(GiftCertificate item) throws IncorrectParameterException {
+    public GiftCertificate insert(GiftCertificate item) {
         GiftCertificateValidator.validate(item);
 
         String currentTimestamp = TimestampHandler.getCurrentTimestamp();
@@ -46,7 +43,7 @@ public class GiftCertificateServiceImpl extends AbstractService<GiftCertificate>
     }
 
     @Override
-    public void update(long id, GiftCertificate item) throws IncorrectParameterException {
+    public void update(long id, GiftCertificate item) {
         IdentifiableValidator.validateId(id);
         GiftCertificateValidator.validateForUpdate(item);
 
@@ -94,8 +91,8 @@ public class GiftCertificateServiceImpl extends AbstractService<GiftCertificate>
     }
 
     @Override
-    public List<GiftCertificate> doFilter(Map<String, String> params) throws IncorrectParameterException {
-        return certificateDao.getWithFilter(orderParameters(params));
+    public List<GiftCertificate> doFilter(Map<String, String> params) {
+        return certificateDao.getWithFilter(params);
     }
 
     private List<Tag> buildTagList(GiftCertificate item) {
@@ -113,38 +110,5 @@ public class GiftCertificateServiceImpl extends AbstractService<GiftCertificate>
             }
         }
         return savingTags;
-    }
-
-    private Map<String, String> orderParameters(Map<String, String> requestParams) throws IncorrectParameterException {
-        Map<String, String> filterParams = new LinkedHashMap<>(requestParams.size());
-        Map<String, String> sortingParams = new LinkedHashMap<>(requestParams.size());
-        Map<String, String> requestParamsCopy = new HashMap<>(requestParams);
-
-        for (Map.Entry<String, String> entry : requestParams.entrySet()) {
-            String key = entry.getKey();
-            String value = entry.getValue();
-            switch (key) {
-                case FilterParameter.NAME:
-                case FilterParameter.DESCRIPTION:
-                case FilterParameter.TAG_NAME: {
-                    filterParams.put(key, value);
-                    requestParamsCopy.remove(key);
-                    break;
-                }
-                case FilterParameter.DATE_SORT:
-                case FilterParameter.NAME_SORT: {
-                    FilterParameterValidator.validateSortType(value);
-                    sortingParams.put(key, value);
-                    requestParamsCopy.remove(key);
-                    break;
-                }
-            }
-        }
-
-        if (!requestParamsCopy.isEmpty()) {
-            throw new IncorrectParameterException(IncorrectParameterMessageCodes.BAD_GIFT_CERTIFICATE_FILTER_PARAMETER);
-        }
-        filterParams.putAll(sortingParams);
-        return filterParams;
     }
 }
