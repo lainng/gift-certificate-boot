@@ -2,8 +2,6 @@ package com.piatnitsa.dao;
 
 import com.piatnitsa.entity.Tag;
 
-import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 /**
@@ -21,10 +19,4 @@ public interface TagDao extends CRDDao<Tag>{
      */
     Optional<Tag> getByName(String name);
 
-    /**
-     * Method for getting a list of {@link Tag} by specific parameters.
-     * @param params request parameters from URL.
-     * @return {@link List} of {@link Tag}.
-     */
-    List<Tag> getWithFilter(Map<String, String> params);
 }

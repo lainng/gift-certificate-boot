@@ -1,6 +1,7 @@
 package com.piatnitsa.dao;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 /**
@@ -37,4 +38,11 @@ public interface CRDDao<T> {
      * @param id an ID of {@link T} entity.
      */
     void removeById(long id);
+
+    /**
+     * Method for getting a list of {@link T} by specific parameters.
+     * @param params request parameters from URL.
+     * @return {@link List} of {@link T}.
+     */
+    List<T> getWithFilter(Map<String, String> params);
 }
