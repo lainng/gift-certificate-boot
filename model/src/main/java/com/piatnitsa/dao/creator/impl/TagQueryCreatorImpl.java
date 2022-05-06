@@ -4,10 +4,7 @@ import com.piatnitsa.dao.creator.QueryCreator;
 import com.piatnitsa.entity.Tag;
 import org.springframework.stereotype.Component;
 
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
+import javax.persistence.criteria.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -20,26 +17,36 @@ public class TagQueryCreatorImpl implements QueryCreator<Tag> {
         CriteriaQuery<Tag> criteriaQuery = criteriaBuilder.createQuery(Tag.class);
         Root<Tag> root = criteriaQuery.from(Tag.class);
 
-        List<Predicate> predicates = new ArrayList<>(1);
-        predicates.add(criteriaBuilder.like(
-                criteriaBuilder.lower(root.get("name")),
-                "%" + params.get("tag_name").toLowerCase() + "%")
-        );
-
-        criteriaQuery.select(root).where(predicates.toArray(new Predicate[0]));
-        if (params.containsKey("tag_name_sort")) {
-            String sortType = params.get("tag_name_sort").toLowerCase();
-            switch (sortType) {
-                case "asc": {
-                    criteriaQuery.orderBy(criteriaBuilder.asc(root.get("name")));
+        List<Predicate> predicates = new ArrayList<>(params.size());
+        List<Order> orders = new ArrayList<>(params.size());
+        for (Map.Entry<String, String> entry : params.entrySet()) {
+            String key = entry.getKey().toLowerCase();
+            switch (key) {
+                case "tag_name": {
+                    predicates.add(criteriaBuilder.like(
+                            criteriaBuilder.lower(root.get("name")),
+                            "%" + params.get("tag_name").toLowerCase() + "%")
+                    );
                     break;
                 }
-                case "desc": {
-                    criteriaQuery.orderBy(criteriaBuilder.desc(root.get("name")));
+                case "tag_name_sort": {
+                    switch (entry.getValue().toLowerCase()) {
+                        case "asc": {
+                            orders.add(criteriaBuilder.asc(root.get("name")));
+                            break;
+                        }
+                        case "desc": {
+                            orders.add(criteriaBuilder.desc(root.get("name")));
+                            break;
+                        }
+                    }
                     break;
                 }
             }
         }
+        criteriaQuery.select(root)
+                .where(predicates.toArray(new Predicate[]{}))
+                .orderBy(orders);
         return criteriaQuery;
     }
 }
