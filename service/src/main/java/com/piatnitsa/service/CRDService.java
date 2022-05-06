@@ -18,7 +18,7 @@ public interface CRDService<T> {
      * @return A {@link T} object.
      * @throws IncorrectParameterException if the ID is not valid.
      */
-    T getById(long id) throws IncorrectParameterException;
+    T getById(long id);
 
     /**
      * Retrieves a {@link List} of {@link T} objects.
@@ -31,12 +31,12 @@ public interface CRDService<T> {
      * @param item an {@link T} entity to save.
      * @throws IncorrectParameterException if the {@link T} entity contains not valid data.
      */
-    T insert(T item) throws IncorrectParameterException;
+    T insert(T item);
 
     /**
      * Removes an {@link T} entity from data source by its ID.
      * @param id an ID of {@link T} entity.
      * @throws IncorrectParameterException if the ID is not valid.
      */
-    void removeById(long id) throws IncorrectParameterException;
+    void removeById(long id);
 }
