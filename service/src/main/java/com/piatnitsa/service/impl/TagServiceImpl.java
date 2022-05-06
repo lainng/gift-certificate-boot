@@ -4,7 +4,6 @@ import com.piatnitsa.dao.TagDao;
 import com.piatnitsa.entity.Tag;
 import com.piatnitsa.exception.IncorrectParameterException;
 import com.piatnitsa.service.AbstractService;
-import com.piatnitsa.service.FilterParameter;
 import com.piatnitsa.service.TagService;
 import com.piatnitsa.validator.FilterParameterValidator;
 import com.piatnitsa.validator.TagValidator;
@@ -33,9 +32,7 @@ public class TagServiceImpl extends AbstractService<Tag> implements TagService {
 
     @Override
     public List<Tag> doFilter(Map<String, String> params) {
-        if (params.containsKey(FilterParameter.SORT_BY_TAG_NAME)) {
-            FilterParameterValidator.validateSortType(params.get(FilterParameter.SORT_BY_TAG_NAME));
-        }
+        FilterParameterValidator.validateSortType(params);
         return tagDao.getWithFilter(params);
     }
 }

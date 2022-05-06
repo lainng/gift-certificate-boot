@@ -1,8 +1,8 @@
 package com.piatnitsa.validator;
 
 import com.piatnitsa.entity.Tag;
+import com.piatnitsa.exception.ExceptionMessageKey;
 import com.piatnitsa.exception.IncorrectParameterException;
-import com.piatnitsa.exception.IncorrectParameterMessageCodes;
 
 /**
  * This class provides a validator for {@link Tag} entity.
@@ -31,7 +31,7 @@ public class TagValidator {
         if (name == null
                 || name.length() < MIN_LENGTH_NAME
                 || name.length() > MAX_LENGTH_NAME) {
-            throw new IncorrectParameterException(IncorrectParameterMessageCodes.BAD_TAG_NAME);
+            throw new IncorrectParameterException(ExceptionMessageKey.BAD_TAG_NAME);
         }
     }
 }

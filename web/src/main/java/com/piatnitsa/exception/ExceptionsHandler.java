@@ -20,7 +20,6 @@ import org.springframework.web.servlet.NoHandlerFoundException;
 public class ExceptionsHandler {
 
     @ExceptionHandler({
-            DaoException.class,
             IncorrectParameterException.class
     })
     public ResponseEntity<ErrorResponse> handleExceptions(Exception ex) {

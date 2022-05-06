@@ -2,8 +2,8 @@ package com.piatnitsa.validator;
 
 import com.piatnitsa.entity.GiftCertificate;
 import com.piatnitsa.entity.Tag;
+import com.piatnitsa.exception.ExceptionMessageKey;
 import com.piatnitsa.exception.IncorrectParameterException;
-import com.piatnitsa.exception.IncorrectParameterMessageCodes;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -76,27 +76,27 @@ public class GiftCertificateValidator {
     private static void validateName(String name) throws IncorrectParameterException {
         if (name == null
                 || name.length() < MIN_LENGTH_NAME || name.length() > MAX_LENGTH_NAME) {
-            throw new IncorrectParameterException(IncorrectParameterMessageCodes.BAD_GIFT_CERTIFICATE_NAME);
+            throw new IncorrectParameterException(ExceptionMessageKey.BAD_GIFT_CERTIFICATE_NAME);
         }
     }
 
     private static void validateDescription(String description) throws IncorrectParameterException {
         if (description == null
                 || description.length() < MIN_LENGTH_DESCRIPTION || description.length() > MAX_LENGTH_DESCRIPTION) {
-            throw new IncorrectParameterException(IncorrectParameterMessageCodes.BAD_GIFT_CERTIFICATE_DESCRIPTION);
+            throw new IncorrectParameterException(ExceptionMessageKey.BAD_GIFT_CERTIFICATE_DESCRIPTION);
         }
     }
 
     private static void validatePrice(BigDecimal price) throws IncorrectParameterException {
         if (price == null || price.scale() > MAX_SCALE
                 || price.compareTo(MIN_PRICE) < 0 || price.compareTo(MAX_PRICE) > 0) {
-            throw new IncorrectParameterException(IncorrectParameterMessageCodes.BAD_GIFT_CERTIFICATE_PRICE);
+            throw new IncorrectParameterException(ExceptionMessageKey.BAD_GIFT_CERTIFICATE_PRICE);
         }
     }
 
     private static void validateDuration(int duration) throws IncorrectParameterException {
         if (duration < MIN_DURATION || duration > MAX_DURATION) {
-            throw new IncorrectParameterException(IncorrectParameterMessageCodes.BAD_GIFT_CERTIFICATE_DURATION);
+            throw new IncorrectParameterException(ExceptionMessageKey.BAD_GIFT_CERTIFICATE_DURATION);
         }
     }
 
@@ -106,7 +106,7 @@ public class GiftCertificateValidator {
                 && item.getPrice() == null
                 && item.getDuration() < MIN_DURATION
                 && item.getTags() == null) {
-            throw new IncorrectParameterException(IncorrectParameterMessageCodes.EMPTY_CERTIFICATE);
+            throw new IncorrectParameterException();
         }
     }
 }
