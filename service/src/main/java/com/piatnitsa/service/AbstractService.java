@@ -1,7 +1,8 @@
 package com.piatnitsa.service;
 
 import com.piatnitsa.dao.CRDDao;
-import com.piatnitsa.exception.IncorrectParameterException;
+import com.piatnitsa.exception.ExceptionMessageKey;
+import com.piatnitsa.exception.NoSuchEntityException;
 import com.piatnitsa.validator.IdentifiableValidator;
 
 import java.util.List;
@@ -22,11 +23,11 @@ public abstract class AbstractService<T> implements CRDService<T> {
     }
 
     @Override
-    public T getById(long id) throws IncorrectParameterException {
+    public T getById(long id) {
         IdentifiableValidator.validateId(id);
         Optional<T> entity = dao.getById(id);
         if (!entity.isPresent()) {
-            throw new IncorrectParameterException();
+            throw new NoSuchEntityException(ExceptionMessageKey.NO_ENTITY);
         }
         return entity.get();
     }
@@ -37,8 +38,12 @@ public abstract class AbstractService<T> implements CRDService<T> {
     }
 
     @Override
-    public void removeById(long id) throws IncorrectParameterException {
+    public void removeById(long id) {
         IdentifiableValidator.validateId(id);
+        Optional<T> foundEntity = dao.getById(id);
+        if (!foundEntity.isPresent()) {
+            throw new NoSuchEntityException(ExceptionMessageKey.NO_ENTITY);
+        }
         dao.removeById(id);
     }
 }
