@@ -1,5 +1,7 @@
 package com.piatnitsa.dao.creator.impl;
 
+import com.piatnitsa.dao.creator.AbstractQueryCreator;
+import com.piatnitsa.dao.creator.FilterParameter;
 import com.piatnitsa.dao.creator.QueryCreator;
 import com.piatnitsa.entity.Tag;
 import org.springframework.stereotype.Component;
@@ -10,7 +12,7 @@ import java.util.List;
 import java.util.Map;
 
 @Component
-public class TagQueryCreatorImpl implements QueryCreator<Tag> {
+public class TagQueryCreatorImpl extends AbstractQueryCreator<Tag> implements QueryCreator<Tag> {
 
     @Override
     public CriteriaQuery<Tag> createFilteringGetQuery(Map<String, String> params, CriteriaBuilder criteriaBuilder) {
@@ -20,26 +22,15 @@ public class TagQueryCreatorImpl implements QueryCreator<Tag> {
         List<Predicate> predicates = new ArrayList<>(params.size());
         List<Order> orders = new ArrayList<>(params.size());
         for (Map.Entry<String, String> entry : params.entrySet()) {
-            String key = entry.getKey().toLowerCase();
-            switch (key) {
-                case "tag_name": {
-                    predicates.add(criteriaBuilder.like(
-                            criteriaBuilder.lower(root.get("name")),
-                            "%" + params.get("tag_name").toLowerCase() + "%")
-                    );
+            String filterParam = entry.getKey().toLowerCase();
+            String paramValue = entry.getValue();
+            switch (filterParam) {
+                case FilterParameter.TAG_NAME: {
+                    predicates.add(addLikePredicate(criteriaBuilder, root.get("name"), paramValue));
                     break;
                 }
-                case "tag_name_sort": {
-                    switch (entry.getValue().toLowerCase()) {
-                        case "asc": {
-                            orders.add(criteriaBuilder.asc(root.get("name")));
-                            break;
-                        }
-                        case "desc": {
-                            orders.add(criteriaBuilder.desc(root.get("name")));
-                            break;
-                        }
-                    }
+                case FilterParameter.SORT_BY_TAG_NAME: {
+                    orders.add(addOrder(criteriaBuilder, root.get("name"), paramValue));
                     break;
                 }
             }
