@@ -24,6 +24,7 @@ public final class ExceptionMessageKey {
     public static final String BAD_GIFT_CERTIFICATE_DURATION = "certificate.badDuration";
     public static final String GIFT_CERTIFICATE_NOT_FOUND = "certificate.notFound";
     public static final String GIFT_CERTIFICATE_EXIST = "certificate.alreadyExist";
+    public static final String EMPTY_CERTIFICATE = "certificate.emptyEntity";
 
     public static final String BAD_USER_ID = "order.badUserID";
     public static final String BAD_GIFT_CERTIFICATE_ID = "order.badGiftCertificateID";
