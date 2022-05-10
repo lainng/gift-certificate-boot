@@ -64,6 +64,7 @@ public abstract class AbstractDao<T> implements CRDDao<T> {
         );
         return entityManager.createQuery(criteriaQuery)
                 .getResultStream()
+                .distinct()
                 .collect(Collectors.toList());
     }
 
