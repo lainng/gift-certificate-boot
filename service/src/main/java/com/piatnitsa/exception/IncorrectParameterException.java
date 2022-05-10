@@ -5,14 +5,15 @@ package com.piatnitsa.exception;
  *
  * @author Vlad Piatnitsa
  * @version 1.0
- * @see com.piatnitsa.validator.IdentifiableValidator
- * @see com.piatnitsa.validator.GiftCertificateValidator
- * @see com.piatnitsa.validator.TagValidator
- * @see com.piatnitsa.validator.FilterParameterValidator
  */
 public class IncorrectParameterException extends RuntimeException {
+    private ExceptionMessage exceptionMessage;
 
     public IncorrectParameterException() {
+    }
+
+    public IncorrectParameterException(ExceptionMessage exceptionMessage) {
+        this.exceptionMessage = exceptionMessage;
     }
 
     public IncorrectParameterException(String messageCode) {
@@ -25,5 +26,9 @@ public class IncorrectParameterException extends RuntimeException {
 
     public IncorrectParameterException(Throwable cause) {
         super(cause);
+    }
+
+    public ExceptionMessage getExceptionMessage() {
+        return exceptionMessage;
     }
 }
