@@ -1,6 +1,7 @@
 package com.piatnitsa.validator;
 
 import com.piatnitsa.entity.Tag;
+import com.piatnitsa.exception.ExceptionMessage;
 import com.piatnitsa.exception.ExceptionMessageKey;
 import com.piatnitsa.exception.IncorrectParameterException;
 
@@ -10,28 +11,34 @@ import com.piatnitsa.exception.IncorrectParameterException;
  * @version 1.0
  */
 public class TagValidator {
-    private static final int MAX_LENGTH_NAME = 40;
+    private static final int MAX_LENGTH_NAME = 20;
     private static final int MIN_LENGTH_NAME = 3;
 
     /**
      * Validates a {@link Tag} entity.
      * @param item a {@link Tag} entity for validating.
+     * @return the {@link ExceptionMessage} object, which may contain the exception messages thrown during {@link Tag} validation
+     * or be empty if no exceptions were thrown.
      * @throws IncorrectParameterException if the entity contains incorrect fields.
      */
-    public static void validate(Tag item) throws IncorrectParameterException {
-        validateName(item.getName());
+    public static ExceptionMessage validate(Tag item) {
+        return validateName(item.getName());
     }
 
     /**
      * Validates a {@link Tag} entity name.
      * @param name a {@link Tag} name.
+     * @return the {@link ExceptionMessage} object, which may contain the exception messages thrown during {@link Tag} validation
+     * or be empty if no exceptions were thrown.
      * @throws IncorrectParameterException if name contains incorrect value.
      */
-    public static void validateName(String name) throws IncorrectParameterException {
+    public static ExceptionMessage validateName(String name) {
+        ExceptionMessage exMessage = new ExceptionMessage();
         if (name == null
                 || name.length() < MIN_LENGTH_NAME
                 || name.length() > MAX_LENGTH_NAME) {
-            throw new IncorrectParameterException(ExceptionMessageKey.BAD_TAG_NAME);
+            exMessage.putException(ExceptionMessageKey.BAD_TAG_NAME, name);
         }
+        return exMessage;
     }
 }
