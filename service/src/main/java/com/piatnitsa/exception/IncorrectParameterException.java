@@ -28,7 +28,7 @@ public class IncorrectParameterException extends RuntimeException {
         super(cause);
     }
 
-    public ExceptionMessageHolder getExceptionMessage() {
+    public ExceptionMessageHolder getExceptionMessageHolder() {
         return exceptionMessageHolder;
     }
 }
