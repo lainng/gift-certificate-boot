@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.servlet.NoHandlerFoundException;
 
+import java.util.Map;
+
 /**
  * This class presents entity which will be returned from controller in case generating exceptions.
  * @author Vlad Piatnitsa
@@ -19,27 +21,33 @@ import org.springframework.web.servlet.NoHandlerFoundException;
 @RestControllerAdvice
 public class ExceptionsHandler {
 
-    @ExceptionHandler({
-            IncorrectParameterException.class
-    })
-    public ResponseEntity<ErrorResponse> handleExceptions(Exception ex) {
-        ErrorResponse errorResponse = new ErrorResponse();
+    @ExceptionHandler(IncorrectParameterException.class)
+    public ResponseEntity<ErrorResponse> handleIncorrectParameterException(IncorrectParameterException ex) {
+        StringBuilder details = new StringBuilder();
+        for (Map.Entry<String, Object[]> exceptionMsg : ex.getExceptionMessageHolder().getMessages().entrySet()) {
+            String message = ExceptionMessageTranslator.toLocale(exceptionMsg.getKey());
+            String detail = String.format(message, exceptionMsg.getValue());
+            details.append(detail).append(' ');
+        }
+        ErrorResponse errorResponse = createResponse(HttpStatus.BAD_REQUEST, details.toString());
+        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+    }
 
-        String errorCode = ex.getMessage();
-        String details = ExceptionMessageTranslator.toLocale(errorCode);
+    @ExceptionHandler(DuplicateEntityException.class)
+    public ResponseEntity<ErrorResponse> handleDuplicateEntityException(DuplicateEntityException ex) {
+        ErrorResponse errorResponse = createResponse(HttpStatus.CONFLICT, ex.getMessage());
+        return new ResponseEntity<>(errorResponse, HttpStatus.CONFLICT);
+    }
 
-        HttpStatus httpStatus = parseHttpStatus(errorCode);
-        errorResponse.setErrorCode(errorCode + " " + httpStatus.getReasonPhrase());
-        errorResponse.setErrorMessage(details);
-        return new ResponseEntity<>(errorResponse, httpStatus);
+    @ExceptionHandler(NoSuchEntityException.class)
+    public ResponseEntity<ErrorResponse> handleNoSuchEntityException(NoSuchEntityException ex) {
+        ErrorResponse errorResponse = createResponse(HttpStatus.NOT_FOUND, ex.getMessage());
+        return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
     public final ResponseEntity<ErrorResponse> methodNotAllowedExceptionException() {
-        ErrorResponse errorResponse = new ErrorResponse();
-        String details = ExceptionMessageTranslator.toLocale("exception.notSupported");
-        errorResponse.setErrorCode(HttpStatus.METHOD_NOT_ALLOWED.toString());
-        errorResponse.setErrorMessage(details);
+        ErrorResponse errorResponse = createResponse(HttpStatus.METHOD_NOT_ALLOWED, "exception.notSupported");
         return new ResponseEntity<>(errorResponse, HttpStatus.METHOD_NOT_ALLOWED);
     }
 
@@ -49,24 +57,21 @@ public class ExceptionsHandler {
             HttpMessageNotReadableException.class
     })
     public final ResponseEntity<ErrorResponse> handleBadRequestExceptions() {
-        ErrorResponse errorResponse = new ErrorResponse();
-        String details = ExceptionMessageTranslator.toLocale("exception.badRequest");
-        errorResponse.setErrorMessage(details);
-        errorResponse.setErrorCode(HttpStatus.BAD_REQUEST.toString());
+        ErrorResponse errorResponse = createResponse(HttpStatus.BAD_REQUEST, "exception.badRequest");
         return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(NoHandlerFoundException.class)
     public final ResponseEntity<ErrorResponse> handleBadRequestException() {
-        ErrorResponse errorResponse = new ErrorResponse();
-        String details = ExceptionMessageTranslator.toLocale("exception.noHandler");
-        errorResponse.setErrorMessage(details);
-        errorResponse.setErrorCode(HttpStatus.NOT_FOUND.toString());
+        ErrorResponse errorResponse = createResponse(HttpStatus.NOT_FOUND, "exception.noHandler");
         return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
     }
 
-    private HttpStatus parseHttpStatus(String exCode) {
-        int httpStatusCode = Integer.parseInt(exCode.substring(0,3));
-        return HttpStatus.valueOf(httpStatusCode);
+    private ErrorResponse createResponse(HttpStatus status, String messageCode) {
+        ErrorResponse errorResponse = new ErrorResponse();
+        String details = ExceptionMessageTranslator.toLocale(messageCode);
+        errorResponse.setErrorMessage(details);
+        errorResponse.setErrorCode(status.toString());
+        return errorResponse;
     }
 }
