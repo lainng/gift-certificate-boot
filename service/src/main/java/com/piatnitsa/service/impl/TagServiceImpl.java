@@ -2,7 +2,9 @@ package com.piatnitsa.service.impl;
 
 import com.piatnitsa.dao.TagDao;
 import com.piatnitsa.entity.Tag;
+import com.piatnitsa.exception.DuplicateEntityException;
 import com.piatnitsa.exception.ExceptionMessageHolder;
+import com.piatnitsa.exception.ExceptionMessageKey;
 import com.piatnitsa.exception.IncorrectParameterException;
 import com.piatnitsa.service.AbstractService;
 import com.piatnitsa.service.TagService;
@@ -27,8 +29,12 @@ public class TagServiceImpl extends AbstractService<Tag> implements TagService {
     @Override
     public Tag insert(Tag item) {
         ExceptionMessageHolder exceptionMessageHolder = TagValidator.validate(item);
-        if (!exceptionMessageHolder.isEmpty()) {
+        if (exceptionMessageHolder.hasMessages()) {
             throw new IncorrectParameterException(exceptionMessageHolder);
+        }
+        boolean isTagExist = tagDao.getByName(item.getName()).isPresent();
+        if (isTagExist) {
+            throw new DuplicateEntityException(ExceptionMessageKey.TAG_EXIST);
         }
         tagDao.insert(item);
         return item;
