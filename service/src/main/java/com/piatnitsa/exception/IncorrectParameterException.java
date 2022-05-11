@@ -7,13 +7,13 @@ package com.piatnitsa.exception;
  * @version 1.0
  */
 public class IncorrectParameterException extends RuntimeException {
-    private ExceptionMessage exceptionMessage;
+    private ExceptionMessageHolder exceptionMessageHolder;
 
     public IncorrectParameterException() {
     }
 
-    public IncorrectParameterException(ExceptionMessage exceptionMessage) {
-        this.exceptionMessage = exceptionMessage;
+    public IncorrectParameterException(ExceptionMessageHolder exceptionMessageHolder) {
+        this.exceptionMessageHolder = exceptionMessageHolder;
     }
 
     public IncorrectParameterException(String messageCode) {
@@ -28,7 +28,7 @@ public class IncorrectParameterException extends RuntimeException {
         super(cause);
     }
 
-    public ExceptionMessage getExceptionMessage() {
-        return exceptionMessage;
+    public ExceptionMessageHolder getExceptionMessage() {
+        return exceptionMessageHolder;
     }
 }

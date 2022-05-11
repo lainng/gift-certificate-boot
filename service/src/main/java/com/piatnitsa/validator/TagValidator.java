@@ -1,7 +1,7 @@
 package com.piatnitsa.validator;
 
 import com.piatnitsa.entity.Tag;
-import com.piatnitsa.exception.ExceptionMessage;
+import com.piatnitsa.exception.ExceptionMessageHolder;
 import com.piatnitsa.exception.ExceptionMessageKey;
 import com.piatnitsa.exception.IncorrectParameterException;
 
@@ -17,23 +17,23 @@ public class TagValidator {
     /**
      * Validates a {@link Tag} entity.
      * @param item a {@link Tag} entity for validating.
-     * @return the {@link ExceptionMessage} object, which may contain the exception messages thrown during {@link Tag} validation
+     * @return the {@link ExceptionMessageHolder} object, which may contain the exception messages thrown during {@link Tag} validation
      * or be empty if no exceptions were thrown.
      * @throws IncorrectParameterException if the entity contains incorrect fields.
      */
-    public static ExceptionMessage validate(Tag item) {
+    public static ExceptionMessageHolder validate(Tag item) {
         return validateName(item.getName());
     }
 
     /**
      * Validates a {@link Tag} entity name.
      * @param name a {@link Tag} name.
-     * @return the {@link ExceptionMessage} object, which may contain the exception messages thrown during {@link Tag} validation
+     * @return the {@link ExceptionMessageHolder} object, which may contain the exception messages thrown during {@link Tag} validation
      * or be empty if no exceptions were thrown.
      * @throws IncorrectParameterException if name contains incorrect value.
      */
-    public static ExceptionMessage validateName(String name) {
-        ExceptionMessage exMessage = new ExceptionMessage();
+    public static ExceptionMessageHolder validateName(String name) {
+        ExceptionMessageHolder exMessage = new ExceptionMessageHolder();
         if (name == null
                 || name.length() < MIN_LENGTH_NAME
                 || name.length() > MAX_LENGTH_NAME) {
