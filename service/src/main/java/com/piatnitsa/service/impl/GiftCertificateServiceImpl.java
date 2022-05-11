@@ -4,13 +4,15 @@ import com.piatnitsa.dao.GiftCertificateDao;
 import com.piatnitsa.dao.TagDao;
 import com.piatnitsa.entity.GiftCertificate;
 import com.piatnitsa.entity.Tag;
+import com.piatnitsa.exception.ExceptionMessageHolder;
+import com.piatnitsa.exception.ExceptionMessageKey;
 import com.piatnitsa.exception.IncorrectParameterException;
+import com.piatnitsa.exception.NoSuchEntityException;
 import com.piatnitsa.service.AbstractService;
 import com.piatnitsa.service.GiftCertificateService;
 import com.piatnitsa.service.TimestampHandler;
 import com.piatnitsa.validator.FilterParameterValidator;
 import com.piatnitsa.validator.GiftCertificateValidator;
-import com.piatnitsa.validator.IdentifiableValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -31,7 +33,10 @@ public class GiftCertificateServiceImpl extends AbstractService<GiftCertificate>
 
     @Override
     public GiftCertificate insert(GiftCertificate item) {
-        GiftCertificateValidator.validate(item);
+        ExceptionMessageHolder exceptionMessageHolder = GiftCertificateValidator.validate(item);
+        if (exceptionMessageHolder.hasMessages()) {
+            throw new IncorrectParameterException(exceptionMessageHolder);
+        }
 
         String currentTimestamp = TimestampHandler.getCurrentTimestamp();
         item.setCreateDate(currentTimestamp);
@@ -45,13 +50,17 @@ public class GiftCertificateServiceImpl extends AbstractService<GiftCertificate>
 
     @Override
     public void update(long id, GiftCertificate item) {
-        IdentifiableValidator.validateId(id);
-        GiftCertificateValidator.validateForUpdate(item);
-
-        if (!certificateDao.getById(id).isPresent()) {
-            throw new IncorrectParameterException();
+        item.setId(id);
+        ExceptionMessageHolder exceptionMessageHolder = GiftCertificateValidator.validateForUpdate(item);
+        if (exceptionMessageHolder.hasMessages()) {
+            throw new IncorrectParameterException(exceptionMessageHolder);
         }
-        GiftCertificate currentCertificate = certificateDao.getById(id).get();
+
+        Optional<GiftCertificate> optionalGiftCertificate = certificateDao.getById(id);
+        if (!optionalGiftCertificate.isPresent()) {
+            throw new NoSuchEntityException(ExceptionMessageKey.NO_ENTITY);
+        }
+        GiftCertificate currentCertificate = optionalGiftCertificate.get();
         currentCertificate.setId(id);
 
         updateObject(item, currentCertificate);
