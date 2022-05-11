@@ -20,7 +20,7 @@ public class ExceptionMessageHolder {
         messages.put(exceptionMessageKey, arguments);
     }
 
-    public boolean isEmpty() {
-        return messages.isEmpty();
+    public boolean hasMessages() {
+        return !messages.isEmpty();
     }
 }
