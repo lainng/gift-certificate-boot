@@ -25,8 +25,14 @@ public class ExceptionsHandler {
     public ResponseEntity<ErrorResponse> handleIncorrectParameterException(IncorrectParameterException ex) {
         StringBuilder details = new StringBuilder();
         for (Map.Entry<String, Object[]> exceptionMsg : ex.getExceptionMessageHolder().getMessages().entrySet()) {
-            String message = ExceptionMessageTranslator.toLocale(exceptionMsg.getKey());
-            String detail = String.format(message, exceptionMsg.getValue());
+            String msgKey = exceptionMsg.getKey();
+            String translatedMsg;
+            if (msgKey.matches(ExceptionMessageKey.BAD_TAG_NAME + "\\d+")) {
+                translatedMsg = ExceptionMessageTranslator.toLocale(ExceptionMessageKey.BAD_TAG_NAME);
+            } else {
+                translatedMsg = ExceptionMessageTranslator.toLocale(exceptionMsg.getKey());
+            }
+            String detail = String.format(translatedMsg, exceptionMsg.getValue());
             details.append(detail).append(' ');
         }
         ErrorResponse errorResponse = createResponse(HttpStatus.BAD_REQUEST, details.toString());
