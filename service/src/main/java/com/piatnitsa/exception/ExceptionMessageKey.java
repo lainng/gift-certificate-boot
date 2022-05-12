@@ -10,7 +10,7 @@ public final class ExceptionMessageKey {
 
     public static final String BAD_ID = "identifiable.badID";
     public static final String ID_EXISTENCE = "identifiable.hasId";
-    public static final String NO_ENTITY = "identifiable.noObject";
+    public static final String NO_ENTITY = "identifiable.noEntity";
 
     public static final String BAD_SORT_TYPE = "sort.badSortType";
 
