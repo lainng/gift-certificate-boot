@@ -2,11 +2,13 @@ package com.piatnitsa.validator;
 
 import com.piatnitsa.entity.GiftCertificate;
 import com.piatnitsa.entity.Tag;
+import com.piatnitsa.exception.ExceptionMessageHolder;
 import com.piatnitsa.exception.ExceptionMessageKey;
 import com.piatnitsa.exception.IncorrectParameterException;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Map;
 
 /**
  * This class provides a validator for {@link GiftCertificate} entity.
@@ -27,86 +29,85 @@ public class GiftCertificateValidator {
     /**
      * Validates all fields of an {@link GiftCertificate} entity.
      * @param item an {@link GiftCertificate} entity for validating.
+     * @return the {@link ExceptionMessageHolder} object, which may contain the exception messages
+     * thrown during {@link GiftCertificate} validation or be empty if no exceptions were thrown.
      * @throws IncorrectParameterException if the entity contains incorrect field values.
      */
-    public static void validate(GiftCertificate item) throws IncorrectParameterException {
-        checkIfEmpty(item);
-        validateName(item.getName());
-        validateDescription(item.getDescription());
-        validatePrice(item.getPrice());
-        validateDuration(item.getDuration());
-        validateListOfTags(item.getTags());
+    public static ExceptionMessageHolder validate(GiftCertificate item) {
+        ExceptionMessageHolder exMessage = new ExceptionMessageHolder();
+        validateName(item.getName(), exMessage);
+        validateDescription(item.getDescription(), exMessage);
+        validatePrice(item.getPrice(), exMessage);
+        validateDuration(item.getDuration(), exMessage);
+        validateListOfTags(item.getTags(), exMessage);
+        return exMessage;
     }
 
     /**
      * Validates exists fields of an {@link GiftCertificate} entity. If some fields do not contain values, validation is not interrupted.
      * @param item an {@link GiftCertificate} entity for validating.
+     * @return the {@link ExceptionMessageHolder} object, which may contain the exception messages
+     * thrown during {@link GiftCertificate} validation or be empty if no exceptions were thrown.
      * @throws IncorrectParameterException if the entity contains incorrect field values.
      */
-    public static void validateForUpdate(GiftCertificate item) throws IncorrectParameterException {
-        checkIfEmpty(item);
+    public static ExceptionMessageHolder validateForUpdate(GiftCertificate item) {
+        ExceptionMessageHolder exMessage = new ExceptionMessageHolder();
+        IdentifiableValidator.validateId(item.getId());
 
         if (item.getName() != null) {
-            validateName(item.getName());
+            validateName(item.getName(), exMessage);
         }
         if (item.getDescription() != null) {
-            validateDescription(item.getDescription());
+            validateDescription(item.getDescription(), exMessage);
         }
         if (item.getPrice() != null) {
-            validatePrice(item.getPrice());
+            validatePrice(item.getPrice(), exMessage);
         }
         if (item.getDuration() != 0) {
-            validateDuration(item.getDuration());
+            validateDuration(item.getDuration(), exMessage);
         }
-        validateListOfTags(item.getTags());
+        validateListOfTags(item.getTags(), exMessage);
+        return exMessage;
     }
 
-    /**
-     * Validates exist tags of {@link GiftCertificate} entity.
-     * @param tags a {@link List} of {@link Tag}.
-     * @throws IncorrectParameterException if some tag has incorrect name.
-     */
-    public static void validateListOfTags(List<Tag> tags) throws IncorrectParameterException {
+    private static void validateListOfTags(List<Tag> tags, ExceptionMessageHolder messageHolder) {
         if (tags == null) return;
+        int count = 0;
         for (Tag tag : tags) {
-            TagValidator.validate(tag);
+            ExceptionMessageHolder tagMessageHolder = TagValidator.validate(tag);
+            if (tagMessageHolder.hasMessages()) {
+                Map<String, Object[]> messages = tagMessageHolder.getMessages();
+                String updatedMsgKey = ExceptionMessageKey.BAD_TAG_NAME + count;
+                messageHolder.getMessages().put(updatedMsgKey, messages.get(ExceptionMessageKey.BAD_TAG_NAME));
+                count++;
+            }
         }
     }
 
-    private static void validateName(String name) throws IncorrectParameterException {
+    private static void validateName(String name, ExceptionMessageHolder exMessage) {
         if (name == null
                 || name.length() < MIN_LENGTH_NAME || name.length() > MAX_LENGTH_NAME) {
-            throw new IncorrectParameterException(ExceptionMessageKey.BAD_GIFT_CERTIFICATE_NAME);
+            exMessage.putException(ExceptionMessageKey.BAD_GIFT_CERTIFICATE_NAME, name);
         }
     }
 
-    private static void validateDescription(String description) throws IncorrectParameterException {
+    private static void validateDescription(String description, ExceptionMessageHolder exMessage) {
         if (description == null
                 || description.length() < MIN_LENGTH_DESCRIPTION || description.length() > MAX_LENGTH_DESCRIPTION) {
-            throw new IncorrectParameterException(ExceptionMessageKey.BAD_GIFT_CERTIFICATE_DESCRIPTION);
+            exMessage.putException(ExceptionMessageKey.BAD_GIFT_CERTIFICATE_DESCRIPTION, description);
         }
     }
 
-    private static void validatePrice(BigDecimal price) throws IncorrectParameterException {
+    private static void validatePrice(BigDecimal price, ExceptionMessageHolder exMessage) {
         if (price == null || price.scale() > MAX_SCALE
                 || price.compareTo(MIN_PRICE) < 0 || price.compareTo(MAX_PRICE) > 0) {
-            throw new IncorrectParameterException(ExceptionMessageKey.BAD_GIFT_CERTIFICATE_PRICE);
+            exMessage.putException(ExceptionMessageKey.BAD_GIFT_CERTIFICATE_PRICE, price);
         }
     }
 
-    private static void validateDuration(int duration) throws IncorrectParameterException {
+    private static void validateDuration(int duration, ExceptionMessageHolder exMessage) {
         if (duration < MIN_DURATION || duration > MAX_DURATION) {
-            throw new IncorrectParameterException(ExceptionMessageKey.BAD_GIFT_CERTIFICATE_DURATION);
-        }
-    }
-
-    private static void checkIfEmpty(GiftCertificate item) throws IncorrectParameterException {
-        if (item.getName() == null
-                && item.getDescription() == null
-                && item.getPrice() == null
-                && item.getDuration() < MIN_DURATION
-                && item.getTags() == null) {
-            throw new IncorrectParameterException();
+            exMessage.putException(ExceptionMessageKey.BAD_GIFT_CERTIFICATE_DURATION, duration);
         }
     }
 }
