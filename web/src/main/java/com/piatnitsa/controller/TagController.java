@@ -5,10 +5,10 @@ import com.piatnitsa.exception.IncorrectParameterException;
 import com.piatnitsa.service.TagService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * This class is an endpoint of the API which allows to perform CRD operations on tags.
@@ -43,7 +43,7 @@ public class TagController {
      * @throws IncorrectParameterException if specified ID is not valid.
      */
     @GetMapping("/{id}")
-    public Tag tagById(@PathVariable long id) throws IncorrectParameterException {
+    public Tag tagById(@PathVariable long id) {
         return tagService.getById(id);
     }
 
@@ -54,7 +54,7 @@ public class TagController {
      * @throws IncorrectParameterException if the {@link Tag} entity contains incorrect information.
      */
     @PostMapping
-    public ResponseEntity<String> createTag(@RequestBody Tag tag) throws IncorrectParameterException {
+    public ResponseEntity<String> createTag(@RequestBody Tag tag) {
         tagService.insert(tag);
         return ResponseEntity.status(HttpStatus.CREATED).body("Success");
     }
@@ -66,7 +66,7 @@ public class TagController {
      * @throws IncorrectParameterException if specified ID is not valid.
      */
     @DeleteMapping("/{id}")
-    public ResponseEntity<Object> delete(@PathVariable long id) throws IncorrectParameterException {
+    public ResponseEntity<Object> delete(@PathVariable long id) {
         tagService.removeById(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
@@ -78,7 +78,7 @@ public class TagController {
      * @throws IncorrectParameterException if request parameters contains incorrect parameter values.
      */
     @GetMapping("/filter")
-    public List<Tag> tagByFilter(@RequestParam Map<String, String> params) throws IncorrectParameterException {
+    public List<Tag> tagByFilter(@RequestParam MultiValueMap<String, String> params) {
         return tagService.doFilter(params);
     }
 }

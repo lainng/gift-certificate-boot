@@ -2,9 +2,9 @@ package com.piatnitsa.service;
 
 import com.piatnitsa.entity.Tag;
 import com.piatnitsa.exception.IncorrectParameterException;
+import org.springframework.util.MultiValueMap;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * This interface describes abstract behavior for working with {@link Tag} objects.
@@ -19,5 +19,5 @@ public interface TagService extends CRDService<Tag> {
      * @return {@link List} of {@link Tag}.
      * @throws IncorrectParameterException if specified parameters contains incorrect parameters.
      */
-    List<Tag> doFilter(Map<String, String> params) throws IncorrectParameterException;
+    List<Tag> doFilter(MultiValueMap<String, String> params);
 }

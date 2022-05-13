@@ -12,9 +12,9 @@ import com.piatnitsa.validator.FilterParameterValidator;
 import com.piatnitsa.validator.TagValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.MultiValueMap;
 
 import java.util.List;
-import java.util.Map;
 
 @Service
 public class TagServiceImpl extends AbstractService<Tag> implements TagService {
@@ -41,7 +41,7 @@ public class TagServiceImpl extends AbstractService<Tag> implements TagService {
     }
 
     @Override
-    public List<Tag> doFilter(Map<String, String> params) {
+    public List<Tag> doFilter(MultiValueMap<String, String> params) {
         FilterParameterValidator.validateSortType(params);
         return tagDao.getWithFilter(params);
     }

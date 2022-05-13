@@ -1,13 +1,13 @@
 package com.piatnitsa.dao;
 
 import com.piatnitsa.dao.creator.QueryCreator;
+import org.springframework.util.MultiValueMap;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.transaction.Transactional;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -57,7 +57,7 @@ public abstract class AbstractDao<T> implements CRDDao<T> {
     }
 
     @Override
-    public List<T> getWithFilter(Map<String, String> params) {
+    public List<T> getWithFilter(MultiValueMap<String, String> params) {
         CriteriaQuery<T> criteriaQuery = queryCreator.createFilteringGetQuery(
                 params,
                 entityManager.getCriteriaBuilder()

@@ -2,9 +2,9 @@ package com.piatnitsa.service;
 
 import com.piatnitsa.entity.GiftCertificate;
 import com.piatnitsa.exception.IncorrectParameterException;
+import org.springframework.util.MultiValueMap;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * This interface describes abstract behavior for working with {@link GiftCertificate} objects.
@@ -19,5 +19,5 @@ public interface GiftCertificateService extends CRUDService<GiftCertificate> {
      * @return {@link List} of {@link GiftCertificate}.
      * @throws IncorrectParameterException if specified parameters contains incorrect parameters.
      */
-    List<GiftCertificate> doFilter(Map<String, String> params) throws IncorrectParameterException;
+    List<GiftCertificate> doFilter(MultiValueMap<String, String> params) throws IncorrectParameterException;
 }

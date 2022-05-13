@@ -6,10 +6,10 @@ import com.piatnitsa.service.GiftCertificateService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * This class is an endpoint of the API which allows to perform CRUD operations on {@link GiftCertificate}.
@@ -56,7 +56,7 @@ public class GiftCertificateController {
      * @throws IncorrectParameterException if the {@link GiftCertificate} entity contains incorrect information.
      */
     @PostMapping
-    public ResponseEntity<String> createCertificate(@RequestBody GiftCertificate certificate) throws IncorrectParameterException {
+    public ResponseEntity<String> createCertificate(@RequestBody GiftCertificate certificate) {
         certificateService.insert(certificate);
         return ResponseEntity.status(HttpStatus.CREATED).body("Success");
     }
@@ -68,7 +68,7 @@ public class GiftCertificateController {
      * @throws IncorrectParameterException if specified ID is not valid.
      */
     @DeleteMapping("/{id}")
-    public ResponseEntity<Object> deleteCertificateById(@PathVariable long id) throws IncorrectParameterException {
+    public ResponseEntity<Object> deleteCertificateById(@PathVariable long id) {
         certificateService.removeById(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
@@ -82,7 +82,7 @@ public class GiftCertificateController {
      */
     @PatchMapping("/{id}")
     public ResponseEntity<String> updateCertificate(@PathVariable long id,
-                                                    @RequestBody GiftCertificate certificate) throws IncorrectParameterException {
+                                                    @RequestBody GiftCertificate certificate) {
         certificateService.update(id, certificate);
         return ResponseEntity.status(HttpStatus.CREATED).body("Success");
     }
@@ -94,7 +94,7 @@ public class GiftCertificateController {
      * @throws IncorrectParameterException if request parameters contains incorrect parameter values.
      */
     @GetMapping("/filter")
-    public List<GiftCertificate> certificateByFilter(@RequestParam Map<String, String> params) throws IncorrectParameterException {
+    public List<GiftCertificate> certificateByFilter(@RequestParam MultiValueMap<String, String> params) {
         return certificateService.doFilter(params);
     }
 }

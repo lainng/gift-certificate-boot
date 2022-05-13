@@ -1,7 +1,8 @@
 package com.piatnitsa.dao;
 
+import org.springframework.util.MultiValueMap;
+
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 /**
@@ -44,5 +45,5 @@ public interface CRDDao<T> {
      * @param params request parameters from URL.
      * @return {@link List} of {@link T}.
      */
-    List<T> getWithFilter(Map<String, String> params);
+    List<T> getWithFilter(MultiValueMap<String, String> params);
 }
