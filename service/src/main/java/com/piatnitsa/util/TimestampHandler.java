@@ -1,4 +1,4 @@
-package com.piatnitsa.service;
+package com.piatnitsa.util;
 
 import com.piatnitsa.entity.GiftCertificate;
 
