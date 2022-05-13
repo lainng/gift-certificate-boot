@@ -6,7 +6,6 @@ import com.piatnitsa.util.updater.DataUpdater;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -20,24 +19,23 @@ public class TagDataUpdaterImpl implements DataUpdater<Tag> {
     }
 
     @Override
-    public void updateData(Tag oldInstance, Tag newInstance) {
+    public void updateData(Tag updatableObject, Tag dataObject) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public List<Tag> updateDataList(List<Tag> oldDataList) {
-        List<Tag> newDataList = new ArrayList<>();
-        if (oldDataList == null || oldDataList.size() == 0) {
-            return newDataList;
+    public void updateDataList(List<Tag> updatableList, List<Tag> dataList) {
+        if (dataList == null) {
+            return;
         }
-        for (Tag tag : oldDataList) {
+        updatableList.clear();
+        for (Tag tag : dataList) {
             Optional<Tag> tagFromDb = tagDao.getByName(tag.getName());
             if (tagFromDb.isPresent()) {
-                newDataList.add(tagFromDb.get());
+                updatableList.add(tagFromDb.get());
             } else {
-                newDataList.add(tag);
+                updatableList.add(tag);
             }
         }
-        return newDataList;
     }
 }
