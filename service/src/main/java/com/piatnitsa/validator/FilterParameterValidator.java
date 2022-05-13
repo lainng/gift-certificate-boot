@@ -2,7 +2,9 @@ package com.piatnitsa.validator;
 
 import com.piatnitsa.exception.ExceptionMessageKey;
 import com.piatnitsa.exception.IncorrectParameterException;
+import org.springframework.util.MultiValueMap;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -19,14 +21,17 @@ public class FilterParameterValidator {
      * @param filterParams filtering parameters.
      * @throws IncorrectParameterException if sort type not equal "asc" or "desc".
      */
-    public static void validateSortType(Map<String, String> filterParams) {
-        for (Map.Entry<String, String> entry : filterParams.entrySet()) {
+    public static void validateSortType(MultiValueMap<String, String> filterParams) {
+        for (Map.Entry<String, List<String>> entry : filterParams.entrySet()) {
             String key = entry.getKey().toLowerCase();
             switch (key) {
                 case "tag_name_sort":
                 case "name_sort":
                 case "date_sort": {
-                    validateType(entry.getValue());
+                    List<String> sortTypeList = entry.getValue();
+                    sortTypeList.stream()
+                            .findFirst()
+                            .ifPresent(FilterParameterValidator::validateType);
                     break;
                 }
             }
