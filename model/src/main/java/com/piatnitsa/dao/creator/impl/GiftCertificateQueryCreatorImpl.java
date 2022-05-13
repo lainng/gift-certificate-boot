@@ -4,6 +4,7 @@ import com.piatnitsa.dao.creator.AbstractQueryCreator;
 import com.piatnitsa.dao.creator.QueryCreator;
 import com.piatnitsa.entity.GiftCertificate;
 import org.springframework.stereotype.Component;
+import org.springframework.util.MultiValueMap;
 
 import javax.persistence.criteria.*;
 import java.util.ArrayList;
@@ -16,16 +17,19 @@ public class GiftCertificateQueryCreatorImpl
         implements QueryCreator<GiftCertificate> {
 
     @Override
-    public CriteriaQuery<GiftCertificate> createFilteringGetQuery(Map<String, String> params,
+    public CriteriaQuery<GiftCertificate> createFilteringGetQuery(MultiValueMap<String, String> params,
                                                                   CriteriaBuilder criteriaBuilder) {
         CriteriaQuery<GiftCertificate> criteriaQuery = criteriaBuilder.createQuery(GiftCertificate.class);
         Root<GiftCertificate> root = criteriaQuery.from(GiftCertificate.class);
 
         List<Predicate> predicates = new ArrayList<>(params.size());
         List<Order> orders = new ArrayList<>(params.size());
-        for(Map.Entry<String, String> entry : params.entrySet()) {
+        for(Map.Entry<String, List<String>> entry : params.entrySet()) {
             String filterParam = entry.getKey().toLowerCase();
-            String paramValue = entry.getValue();
+            String paramValue = entry.getValue()
+                    .stream()
+                    .findFirst()
+                    .orElse("");
             switch (filterParam) {
                 case "name": {
                     predicates.add(addLikePredicate(criteriaBuilder, root.get("name"), paramValue));
@@ -36,7 +40,12 @@ public class GiftCertificateQueryCreatorImpl
                     break;
                 }
                 case "tag_name": {
-                    predicates.add(addLikePredicate(criteriaBuilder, root.join("tags").get("name"), paramValue));
+                    List<String> tagNames = entry.getValue();
+                    tagNames.forEach(
+                            (tagName) -> predicates.add(
+                                    addLikePredicate(criteriaBuilder, root.join("tags").get("name"), tagName)
+                            )
+                    );
                     break;
                 }
                 case "name_sort": {

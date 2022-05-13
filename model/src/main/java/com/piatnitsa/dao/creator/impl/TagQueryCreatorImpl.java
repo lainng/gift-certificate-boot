@@ -5,6 +5,7 @@ import com.piatnitsa.dao.creator.FilterParameter;
 import com.piatnitsa.dao.creator.QueryCreator;
 import com.piatnitsa.entity.Tag;
 import org.springframework.stereotype.Component;
+import org.springframework.util.MultiValueMap;
 
 import javax.persistence.criteria.*;
 import java.util.ArrayList;
@@ -15,15 +16,18 @@ import java.util.Map;
 public class TagQueryCreatorImpl extends AbstractQueryCreator<Tag> implements QueryCreator<Tag> {
 
     @Override
-    public CriteriaQuery<Tag> createFilteringGetQuery(Map<String, String> params, CriteriaBuilder criteriaBuilder) {
+    public CriteriaQuery<Tag> createFilteringGetQuery(MultiValueMap<String, String> params, CriteriaBuilder criteriaBuilder) {
         CriteriaQuery<Tag> criteriaQuery = criteriaBuilder.createQuery(Tag.class);
         Root<Tag> root = criteriaQuery.from(Tag.class);
 
         List<Predicate> predicates = new ArrayList<>(params.size());
         List<Order> orders = new ArrayList<>(params.size());
-        for (Map.Entry<String, String> entry : params.entrySet()) {
+        for (Map.Entry<String, List<String>> entry : params.entrySet()) {
             String filterParam = entry.getKey().toLowerCase();
-            String paramValue = entry.getValue();
+            String paramValue = entry.getValue()
+                    .stream()
+                    .findFirst()
+                    .orElse("");
             switch (filterParam) {
                 case FilterParameter.TAG_NAME: {
                     predicates.add(addLikePredicate(criteriaBuilder, root.get("name"), paramValue));
