@@ -1,7 +1,9 @@
 package com.piatnitsa.service;
 
 import com.piatnitsa.dao.CRDDao;
+import com.piatnitsa.exception.ExceptionMessageHolder;
 import com.piatnitsa.exception.ExceptionMessageKey;
+import com.piatnitsa.exception.IncorrectParameterException;
 import com.piatnitsa.exception.NoSuchEntityException;
 import com.piatnitsa.validator.IdentifiableValidator;
 
@@ -24,7 +26,7 @@ public abstract class AbstractService<T> implements CRDService<T> {
 
     @Override
     public T getById(long id) {
-        IdentifiableValidator.validateId(id);
+        validateId(id);
         Optional<T> entity = dao.getById(id);
         if (!entity.isPresent()) {
             throw new NoSuchEntityException(ExceptionMessageKey.NO_ENTITY);
@@ -39,11 +41,18 @@ public abstract class AbstractService<T> implements CRDService<T> {
 
     @Override
     public void removeById(long id) {
-        IdentifiableValidator.validateId(id);
+        validateId(id);
         Optional<T> foundEntity = dao.getById(id);
         if (!foundEntity.isPresent()) {
             throw new NoSuchEntityException(ExceptionMessageKey.NO_ENTITY);
         }
         dao.removeById(id);
+    }
+
+    private void validateId(long id) {
+        ExceptionMessageHolder messageHolder = IdentifiableValidator.validateId(id);
+        if (messageHolder.hasMessages()) {
+            throw new IncorrectParameterException(messageHolder);
+        }
     }
 }
