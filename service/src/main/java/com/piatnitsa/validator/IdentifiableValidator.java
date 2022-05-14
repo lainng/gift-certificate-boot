@@ -1,7 +1,7 @@
 package com.piatnitsa.validator;
 
+import com.piatnitsa.exception.ExceptionMessageHolder;
 import com.piatnitsa.exception.ExceptionMessageKey;
-import com.piatnitsa.exception.IncorrectParameterException;
 
 /**
  * This class provides a validator for entity identifier.
@@ -13,11 +13,14 @@ public class IdentifiableValidator {
     /**
      * Validates an entity ID.
      * @param id an entity ID.
-     * @throws IncorrectParameterException if the ID contains incorrect value.
+     * @return the {@link ExceptionMessageHolder} object, which may contain the exception messages thrown during ID validation
+     * or be empty if no exceptions were thrown.
      */
-    public static void validateId(long id) throws IncorrectParameterException {
+    public static ExceptionMessageHolder validateId(long id) {
+        ExceptionMessageHolder holder = new ExceptionMessageHolder();
         if (id < 1) {
-            throw new IncorrectParameterException(ExceptionMessageKey.BAD_ID);
+            holder.putException(ExceptionMessageKey.BAD_ID, id);
         }
+        return holder;
     }
 }
