@@ -47,8 +47,7 @@ public class GiftCertificateDataUpdaterImpl implements DataUpdater<GiftCertifica
             tagDataUpdater.updateDataList(updatableObject.getTags(), dataObject.getTags());
         }
 
-        String currentTimestamp = TimestampHandler.getCurrentTimestamp();
-        updatableObject.setLastUpdateDate(currentTimestamp);
+        updatableObject.setLastUpdateDate(TimestampHandler.getCurrentTimestamp());
     }
 
     @Override

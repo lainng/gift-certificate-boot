@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.MultiValueMap;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -44,7 +45,7 @@ public class GiftCertificateServiceImpl extends AbstractService<GiftCertificate>
             throw new IncorrectParameterException(exceptionMessageHolder);
         }
 
-        String currentTimestamp = TimestampHandler.getCurrentTimestamp();
+        LocalDateTime currentTimestamp = TimestampHandler.getCurrentTimestamp();
         item.setCreateDate(currentTimestamp);
         item.setLastUpdateDate(currentTimestamp);
 
