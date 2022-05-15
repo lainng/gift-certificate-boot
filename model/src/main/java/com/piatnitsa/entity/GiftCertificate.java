@@ -2,6 +2,7 @@ package com.piatnitsa.entity;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 
@@ -32,10 +33,10 @@ public class GiftCertificate {
     private int duration;
 
     @Column(name = "create_date")
-    private String createDate;
+    private LocalDateTime createDate;
 
     @Column(name = "last_update_date")
-    private String lastUpdateDate;
+    private LocalDateTime lastUpdateDate;
 
     @ManyToMany(cascade = {CascadeType.MERGE, CascadeType.PERSIST})
     @JoinTable(
@@ -52,8 +53,8 @@ public class GiftCertificate {
                            String description,
                            BigDecimal price,
                            int duration,
-                           String createDate,
-                           String lastUpdateDate,
+                           LocalDateTime createDate,
+                           LocalDateTime lastUpdateDate,
                            List<Tag> tags) {
         this.id = id;
         this.name = name;
@@ -105,19 +106,19 @@ public class GiftCertificate {
         this.duration = duration;
     }
 
-    public String getCreateDate() {
+    public LocalDateTime getCreateDate() {
         return createDate;
     }
 
-    public void setCreateDate(String createDate) {
+    public void setCreateDate(LocalDateTime createDate) {
         this.createDate = createDate;
     }
 
-    public String getLastUpdateDate() {
+    public LocalDateTime getLastUpdateDate() {
         return lastUpdateDate;
     }
 
-    public void setLastUpdateDate(String lastUpdateDate) {
+    public void setLastUpdateDate(LocalDateTime lastUpdateDate) {
         this.lastUpdateDate = lastUpdateDate;
     }
 
