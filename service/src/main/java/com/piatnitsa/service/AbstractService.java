@@ -49,7 +49,7 @@ public abstract class AbstractService<T> implements CRDService<T> {
         dao.removeById(id);
     }
 
-    private void validateId(long id) {
+    protected void validateId(long id) {
         ExceptionMessageHolder messageHolder = IdentifiableValidator.validateId(id);
         if (messageHolder.hasMessages()) {
             throw new IncorrectParameterException(messageHolder);
