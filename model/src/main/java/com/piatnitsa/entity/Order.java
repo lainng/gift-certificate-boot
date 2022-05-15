@@ -6,7 +6,7 @@ import java.time.LocalDateTime;
 import java.util.Objects;
 
 @Entity
-@Table(name = "order")
+@Table(name = "`order`")
 public class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,6 +25,20 @@ public class Order {
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
+
+    public Order() {}
+
+    public Order(long id,
+                 BigDecimal cost,
+                 LocalDateTime purchaseTime,
+                 GiftCertificate certificate,
+                 User user) {
+        this.id = id;
+        this.cost = cost;
+        this.purchaseTime = purchaseTime;
+        this.certificate = certificate;
+        this.user = user;
+    }
 
     public long getId() {
         return id;
