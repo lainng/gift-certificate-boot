@@ -52,7 +52,7 @@ public class ExceptionsHandler {
     }
 
     @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
-    public final ResponseEntity<ErrorResponse> methodNotAllowedExceptionException() {
+    public ResponseEntity<ErrorResponse> methodNotAllowedExceptionException() {
         ErrorResponse errorResponse = createResponse(HttpStatus.METHOD_NOT_ALLOWED, "exception.notSupported");
         return new ResponseEntity<>(errorResponse, HttpStatus.METHOD_NOT_ALLOWED);
     }
@@ -62,15 +62,21 @@ public class ExceptionsHandler {
             JsonProcessingException.class,
             HttpMessageNotReadableException.class
     })
-    public final ResponseEntity<ErrorResponse> handleBadRequestExceptions() {
+    public ResponseEntity<ErrorResponse> handleBadRequestExceptions() {
         ErrorResponse errorResponse = createResponse(HttpStatus.BAD_REQUEST, "exception.badRequest");
         return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(NoHandlerFoundException.class)
-    public final ResponseEntity<ErrorResponse> handleBadRequestException() {
+    public ResponseEntity<ErrorResponse> handleBadRequestException() {
         ErrorResponse errorResponse = createResponse(HttpStatus.NOT_FOUND, "exception.noHandler");
         return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(UnsupportedOperationException.class)
+    public ResponseEntity<ErrorResponse> handleUnsupportedOperationException() {
+        ErrorResponse errorResponse = createResponse(HttpStatus.METHOD_NOT_ALLOWED, "exception.unsupportedOperation");
+        return new ResponseEntity<>(errorResponse, HttpStatus.METHOD_NOT_ALLOWED);
     }
 
     private ErrorResponse createResponse(HttpStatus status, String messageCode) {
