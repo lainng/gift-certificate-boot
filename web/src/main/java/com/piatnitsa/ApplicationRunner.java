@@ -5,7 +5,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.web.servlet.DispatcherServlet;
 
-@SpringBootApplication
+@SpringBootApplication(scanBasePackages = "com.piatnitsa")
 public class ApplicationRunner {
 
     public static void main(String[] args) {
