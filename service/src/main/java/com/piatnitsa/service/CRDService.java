@@ -28,10 +28,10 @@ public interface CRDService<T> {
 
     /**
      * Method for saving an {@link T} entity
-     * @param item an {@link T} entity to save.
+     * @param entity an {@link T} entity to save.
      * @throws IncorrectParameterException if the {@link T} entity contains not valid data.
      */
-    T insert(T item);
+    T insert(T entity);
 
     /**
      * Removes an {@link T} entity from data source by its ID.

@@ -10,8 +10,8 @@ public interface CRUDDao<T> extends CRDDao<T> {
 
     /**
      * Updates an {@link T} entity at data source.
-     * @param item an updated entity.
+     * @param entity an updated entity.
      * @return an updated entity.
      */
-    T update(T item);
+    T update(T entity);
 }

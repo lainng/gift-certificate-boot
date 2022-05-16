@@ -13,8 +13,8 @@ public interface CRUDService<T> extends CRDService<T> {
     /**
      * Updates an {@link T} entity at data source.
      * @param id an ID of specified entity.
-     * @param item an updated entity.
+     * @param entity an updated entity.
      * @throws IncorrectParameterException if the ID is not valid or the entity contains not valid data.
      */
-    void update(long id, T item);
+    void update(long id, T entity);
 }

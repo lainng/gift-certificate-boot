@@ -16,7 +16,7 @@ public class UserDaoImpl extends AbstractDao<User> implements UserDao {
     }
 
     @Override
-    public User insert(User item) {
+    public User insert(User entity) {
         throw new UnsupportedOperationException();
     }
 

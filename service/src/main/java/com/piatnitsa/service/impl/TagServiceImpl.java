@@ -27,17 +27,17 @@ public class TagServiceImpl extends AbstractService<Tag> implements TagService {
     }
 
     @Override
-    public Tag insert(Tag item) {
-        ExceptionMessageHolder exceptionMessageHolder = TagValidator.validate(item);
+    public Tag insert(Tag entity) {
+        ExceptionMessageHolder exceptionMessageHolder = TagValidator.validate(entity);
         if (exceptionMessageHolder.hasMessages()) {
             throw new IncorrectParameterException(exceptionMessageHolder);
         }
-        boolean isTagExist = tagDao.getByName(item.getName()).isPresent();
+        boolean isTagExist = tagDao.getByName(entity.getName()).isPresent();
         if (isTagExist) {
             throw new DuplicateEntityException(ExceptionMessageKey.TAG_EXIST);
         }
-        tagDao.insert(item);
-        return item;
+        tagDao.insert(entity);
+        return entity;
     }
 
     @Override

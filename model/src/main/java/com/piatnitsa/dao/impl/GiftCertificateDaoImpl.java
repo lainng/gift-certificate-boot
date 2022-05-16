@@ -18,8 +18,8 @@ public class GiftCertificateDaoImpl extends AbstractDao<GiftCertificate> impleme
 
     @Override
     @Transactional
-    public GiftCertificate update(GiftCertificate item) {
-        return entityManager.merge(item);
+    public GiftCertificate update(GiftCertificate entity) {
+        return entityManager.merge(entity);
     }
 
 }

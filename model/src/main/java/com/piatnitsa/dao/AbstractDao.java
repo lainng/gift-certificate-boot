@@ -44,9 +44,9 @@ public abstract class AbstractDao<T> implements CRDDao<T> {
 
     @Override
     @Transactional
-    public T insert(T item) {
-        entityManager.persist(item);
-        return item;
+    public T insert(T entity) {
+        entityManager.persist(entity);
+        return entity;
     }
 
     @Override

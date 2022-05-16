@@ -41,27 +41,27 @@ public class OrderServiceImpl extends AbstractService<Order> implements OrderSer
     }
 
     @Override
-    public Order insert(Order item) {
-        ExceptionMessageHolder holder = OrderValidator.validate(item);
+    public Order insert(Order entity) {
+        ExceptionMessageHolder holder = OrderValidator.validate(entity);
         if (holder.hasMessages()) {
             throw new IncorrectParameterException(holder);
         }
 
-        Optional<GiftCertificate> optionalGiftCertificate = giftCertificateDao.getById(item.getCertificate().getId());
+        Optional<GiftCertificate> optionalGiftCertificate = giftCertificateDao.getById(entity.getCertificate().getId());
         if (!optionalGiftCertificate.isPresent()) {
             throw new NoSuchEntityException(ExceptionMessageKey.GIFT_CERTIFICATE_NOT_FOUND);
         }
-        item.setCertificate(optionalGiftCertificate.get());
+        entity.setCertificate(optionalGiftCertificate.get());
 
-        Optional<User> optionalUser = userDao.getById(item.getUser().getId());
+        Optional<User> optionalUser = userDao.getById(entity.getUser().getId());
         if (!optionalUser.isPresent()) {
             throw new NoSuchEntityException(ExceptionMessageKey.USER_NOT_FOUND);
         }
-        item.setUser(optionalUser.get());
+        entity.setUser(optionalUser.get());
 
-        item.setCost(optionalGiftCertificate.get().getPrice());
-        item.setPurchaseTime(TimestampHandler.getCurrentTimestamp());
-        orderDao.insert(item);
-        return item;
+        entity.setCost(optionalGiftCertificate.get().getPrice());
+        entity.setPurchaseTime(TimestampHandler.getCurrentTimestamp());
+        orderDao.insert(entity);
+        return entity;
     }
 }

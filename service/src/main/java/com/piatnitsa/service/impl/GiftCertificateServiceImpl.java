@@ -39,21 +39,21 @@ public class GiftCertificateServiceImpl extends AbstractService<GiftCertificate>
     }
 
     @Override
-    public GiftCertificate insert(GiftCertificate item) {
-        ExceptionMessageHolder exceptionMessageHolder = GiftCertificateValidator.validate(item);
+    public GiftCertificate insert(GiftCertificate entity) {
+        ExceptionMessageHolder exceptionMessageHolder = GiftCertificateValidator.validate(entity);
         if (exceptionMessageHolder.hasMessages()) {
             throw new IncorrectParameterException(exceptionMessageHolder);
         }
 
         LocalDateTime currentTimestamp = TimestampHandler.getCurrentTimestamp();
-        item.setCreateDate(currentTimestamp);
-        item.setLastUpdateDate(currentTimestamp);
+        entity.setCreateDate(currentTimestamp);
+        entity.setLastUpdateDate(currentTimestamp);
 
-        List<Tag> newTags = new ArrayList<>(item.getTags().size());
-        tagDataUpdater.updateDataList(newTags, item.getTags());
-        item.setTags(newTags);
-        certificateDao.insert(item);
-        return item;
+        List<Tag> newTags = new ArrayList<>(entity.getTags().size());
+        tagDataUpdater.updateDataList(newTags, entity.getTags());
+        entity.setTags(newTags);
+        certificateDao.insert(entity);
+        return entity;
     }
 
     @Override
