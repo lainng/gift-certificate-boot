@@ -16,6 +16,10 @@ import java.util.Optional;
 
 @Repository
 public class TagDaoImpl extends AbstractDao<Tag> implements TagDao {
+    private static final String QUERY_SELECT_MOST_POPULAR_TAG = "select t from Order o " +
+            "join o.certificate c " +
+            "join c.tags t " +
+            "group by t.id order by count(t.id) desc, sum(o.cost) desc";
 
     @Autowired
     public TagDaoImpl(QueryCreator<Tag> queryCreator) {
@@ -29,6 +33,13 @@ public class TagDaoImpl extends AbstractDao<Tag> implements TagDao {
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
         CriteriaQuery<Tag> criteriaQuery = queryCreator.createFilteringGetQuery(paramMap, criteriaBuilder);
         return entityManager.createQuery(criteriaQuery)
+                .getResultStream()
+                .findFirst();
+    }
+
+    @Override
+    public Optional<Tag> getMostPopularTagWithHighestCostOfAllOrders() {
+        return entityManager.createQuery(QUERY_SELECT_MOST_POPULAR_TAG, entityType)
                 .getResultStream()
                 .findFirst();
     }

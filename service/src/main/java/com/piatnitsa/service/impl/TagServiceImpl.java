@@ -2,10 +2,7 @@ package com.piatnitsa.service.impl;
 
 import com.piatnitsa.dao.TagDao;
 import com.piatnitsa.entity.Tag;
-import com.piatnitsa.exception.DuplicateEntityException;
-import com.piatnitsa.exception.ExceptionMessageHolder;
-import com.piatnitsa.exception.ExceptionMessageKey;
-import com.piatnitsa.exception.IncorrectParameterException;
+import com.piatnitsa.exception.*;
 import com.piatnitsa.service.AbstractService;
 import com.piatnitsa.service.TagService;
 import com.piatnitsa.validator.FilterParameterValidator;
@@ -15,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.MultiValueMap;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class TagServiceImpl extends AbstractService<Tag> implements TagService {
@@ -44,5 +42,14 @@ public class TagServiceImpl extends AbstractService<Tag> implements TagService {
     public List<Tag> doFilter(MultiValueMap<String, String> params) {
         FilterParameterValidator.validateSortType(params);
         return tagDao.getWithFilter(params);
+    }
+
+    @Override
+    public Tag getMostPopularTagWithHighestCostOfAllOrders() {
+        Optional<Tag> optionalTag = tagDao.getMostPopularTagWithHighestCostOfAllOrders();
+        if (!optionalTag.isPresent()) {
+            throw new NoSuchEntityException(ExceptionMessageKey.TAG_NOT_FOUND);
+        }
+        return optionalTag.get();
     }
 }
