@@ -81,4 +81,10 @@ public class TagController {
     public List<Tag> tagByFilter(@RequestParam MultiValueMap<String, String> params) {
         return tagService.doFilter(params);
     }
+
+    @GetMapping("/popular")
+    @ResponseStatus(HttpStatus.OK)
+    public Tag mostPopularUserTagWithHighestCostOfAllOrders() {
+        return tagService.getMostPopularTagWithHighestCostOfAllOrders();
+    }
 }
