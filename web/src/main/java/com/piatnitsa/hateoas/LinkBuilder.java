@@ -1,5 +1,6 @@
 package com.piatnitsa.hateoas;
 
-public interface LinkBuilder {
-    void buildLink();
+public interface LinkBuilder<T> {
+
+    void buildLinks(T object);
 }
