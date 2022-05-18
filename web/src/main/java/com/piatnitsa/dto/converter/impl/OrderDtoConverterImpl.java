@@ -1,15 +1,23 @@
 package com.piatnitsa.dto.converter.impl;
 
+import com.piatnitsa.dto.GiftCertificateDto;
 import com.piatnitsa.dto.OrderCreationDto;
 import com.piatnitsa.dto.OrderDto;
 import com.piatnitsa.dto.converter.DtoConverter;
 import com.piatnitsa.entity.GiftCertificate;
 import com.piatnitsa.entity.Order;
 import com.piatnitsa.entity.User;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
 public class OrderDtoConverterImpl implements DtoConverter<OrderDto, Order> {
+    private final DtoConverter<GiftCertificateDto, GiftCertificate> certificateDtoConverter;
+
+    @Autowired
+    public OrderDtoConverterImpl(DtoConverter<GiftCertificateDto, GiftCertificate> certificateDtoConverter) {
+        this.certificateDtoConverter = certificateDtoConverter;
+    }
 
     @Override
     public Order toEntity(OrderDto dto) {
@@ -34,7 +42,7 @@ public class OrderDtoConverterImpl implements DtoConverter<OrderDto, Order> {
         dto.setId(entity.getId());
         dto.setCost(entity.getCost());
         dto.setPurchaseTime(entity.getPurchaseTime());
-        dto.setCertificate(entity.getCertificate());
+        dto.setCertificate(certificateDtoConverter.toDto(entity.getCertificate()));
         dto.setUser(entity.getUser());
 
         return dto;
