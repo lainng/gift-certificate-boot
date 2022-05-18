@@ -1,6 +1,5 @@
 package com.piatnitsa.dto;
 
-import com.piatnitsa.entity.GiftCertificate;
 import com.piatnitsa.entity.User;
 import org.springframework.hateoas.RepresentationModel;
 
@@ -11,7 +10,7 @@ public class OrderDto extends RepresentationModel<OrderDto> {
     private long id;
     private BigDecimal cost;
     private LocalDateTime purchaseTime;
-    private GiftCertificate certificate;
+    private GiftCertificateDto certificate;
     private User user;
 
     public long getId() {
@@ -38,11 +37,11 @@ public class OrderDto extends RepresentationModel<OrderDto> {
         this.purchaseTime = purchaseTime;
     }
 
-    public GiftCertificate getCertificate() {
+    public GiftCertificateDto getCertificate() {
         return certificate;
     }
 
-    public void setCertificate(GiftCertificate certificate) {
+    public void setCertificate(GiftCertificateDto certificate) {
         this.certificate = certificate;
     }
 
