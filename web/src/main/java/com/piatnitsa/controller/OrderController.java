@@ -7,11 +7,16 @@ import com.piatnitsa.entity.Order;
 import com.piatnitsa.hateoas.LinkBuilder;
 import com.piatnitsa.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.CollectionModel;
+import org.springframework.hateoas.Link;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.stream.Collectors;
+
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @RestController
 @RequestMapping("/orders")
@@ -31,12 +36,13 @@ public class OrderController {
 
     @GetMapping("/users/{userId}")
     @ResponseStatus(HttpStatus.OK)
-    public List<OrderDto> ordersByUserId(@PathVariable long userId) {
-        List<Order> orders = orderService.getOrdersByUserId(userId);
-        return orders.stream()
+    public CollectionModel<OrderDto> ordersByUserId(@PathVariable long userId) {
+        List<OrderDto> orders = orderService.getOrdersByUserId(userId).stream()
                 .map(orderDtoConverter::toDto)
                 .peek(orderLinkBuilder::buildLinks)
                 .collect(Collectors.toList());
+        Link link = linkTo(methodOn(OrderController.class).ordersByUserId(userId)).withSelfRel();
+        return CollectionModel.of(orders, link);
     }
 
     @PostMapping
