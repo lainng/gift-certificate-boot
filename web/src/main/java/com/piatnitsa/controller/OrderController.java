@@ -24,6 +24,7 @@ public class OrderController {
     private final OrderService orderService;
     private final DtoConverter<OrderDto, Order> orderDtoConverter;
     private final LinkBuilder<OrderDto> orderLinkBuilder;
+    private static final Class<OrderController> ORDER_CONTROLLER_CLASS = OrderController.class;
 
     @Autowired
     public OrderController(OrderService orderService,
@@ -41,13 +42,16 @@ public class OrderController {
                 .map(orderDtoConverter::toDto)
                 .peek(orderLinkBuilder::buildLinks)
                 .collect(Collectors.toList());
-        Link link = linkTo(methodOn(OrderController.class).ordersByUserId(userId)).withSelfRel();
+        Link link = linkTo(methodOn(ORDER_CONTROLLER_CLASS).ordersByUserId(userId)).withSelfRel();
         return CollectionModel.of(orders, link);
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Order createOrder(@RequestBody OrderCreationDto orderDto) {
-        return orderService.insert(orderDtoConverter.toEntity(orderDto));
+    public OrderDto createOrder(@RequestBody OrderCreationDto orderCreationDto) {
+        Order order = orderService.insert(orderDtoConverter.toEntity(orderCreationDto));
+        OrderDto orderDto = orderDtoConverter.toDto(order);
+        orderLinkBuilder.buildLinks(orderDto);
+        return orderDto;
     }
 }
