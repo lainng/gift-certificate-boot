@@ -1,14 +1,24 @@
 package com.piatnitsa.controller;
 
+import com.piatnitsa.dto.TagDto;
+import com.piatnitsa.dto.converter.DtoConverter;
 import com.piatnitsa.entity.Tag;
 import com.piatnitsa.exception.IncorrectParameterException;
+import com.piatnitsa.hateoas.LinkBuilder;
 import com.piatnitsa.service.TagService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.CollectionModel;
+import org.springframework.hateoas.Link;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
+
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 /**
  * This class is an endpoint of the API which allows to perform CRD operations on tags.
@@ -21,10 +31,18 @@ import java.util.List;
 @RestController
 @RequestMapping("/tags")
 public class TagController {
+    private static final Class<TagController> TAG_CONTROLLER_CLASS = TagController.class;
     private final TagService tagService;
+    private final DtoConverter<TagDto, Tag> tagDtoConverter;
+    private final LinkBuilder<TagDto> tagDtoLinkBuilder;
 
-    public TagController(TagService tagService) {
+    @Autowired
+    public TagController(TagService tagService,
+                         DtoConverter<TagDto, Tag> tagDtoConverter,
+                         LinkBuilder<TagDto> tagDtoLinkBuilder) {
         this.tagService = tagService;
+        this.tagDtoConverter = tagDtoConverter;
+        this.tagDtoLinkBuilder = tagDtoLinkBuilder;
     }
 
     /**
@@ -32,8 +50,14 @@ public class TagController {
      * @return a {@link List} of {@link Tag} entities.
      */
     @GetMapping
-    public List<Tag> allTags() {
-        return tagService.getAll();
+    public CollectionModel<TagDto> allTags() {
+        List<Tag> tags = tagService.getAll();
+        List<TagDto> dtoList = tags.stream()
+                .map(tagDtoConverter::toDto)
+                .peek(tagDtoLinkBuilder::buildLinks)
+                .collect(Collectors.toList());
+        Link selfLink = linkTo(methodOn(TAG_CONTROLLER_CLASS).allTags()).withSelfRel();
+        return CollectionModel.of(dtoList, selfLink);
     }
 
     /**
@@ -43,8 +67,11 @@ public class TagController {
      * @throws IncorrectParameterException if specified ID is not valid.
      */
     @GetMapping("/{id}")
-    public Tag tagById(@PathVariable long id) {
-        return tagService.getById(id);
+    public TagDto tagById(@PathVariable long id) {
+        Tag tag = tagService.getById(id);
+        TagDto tagDto = tagDtoConverter.toDto(tag);
+        tagDtoLinkBuilder.buildLinks(tagDto);
+        return tagDto;
     }
 
     /**
@@ -54,9 +81,12 @@ public class TagController {
      * @throws IncorrectParameterException if the {@link Tag} entity contains incorrect information.
      */
     @PostMapping
-    public ResponseEntity<String> createTag(@RequestBody Tag tag) {
-        tagService.insert(tag);
-        return ResponseEntity.status(HttpStatus.CREATED).body("Success");
+    @ResponseStatus(HttpStatus.CREATED)
+    public TagDto createTag(@RequestBody Tag tag) {
+        Tag savedTag = tagService.insert(tag);
+        TagDto tagDto = tagDtoConverter.toDto(savedTag);
+        tagDtoLinkBuilder.buildLinks(tagDto);
+        return tagDto;
     }
 
     /**
@@ -66,7 +96,8 @@ public class TagController {
      * @throws IncorrectParameterException if specified ID is not valid.
      */
     @DeleteMapping("/{id}")
-    public ResponseEntity<Object> delete(@PathVariable long id) {
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public ResponseEntity<Void> delete(@PathVariable long id) {
         tagService.removeById(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
@@ -78,13 +109,23 @@ public class TagController {
      * @throws IncorrectParameterException if request parameters contains incorrect parameter values.
      */
     @GetMapping("/filter")
-    public List<Tag> tagByFilter(@RequestParam MultiValueMap<String, String> params) {
-        return tagService.doFilter(params);
+    @ResponseStatus(HttpStatus.OK)
+    public CollectionModel<TagDto> tagByFilter(@RequestParam MultiValueMap<String, String> params) {
+        List<Tag> tags = tagService.doFilter(params);
+        List<TagDto> dtoList = tags.stream()
+                .map(tagDtoConverter::toDto)
+                .peek(tagDtoLinkBuilder::buildLinks)
+                .collect(Collectors.toList());
+        Link selfLink = linkTo(methodOn(TAG_CONTROLLER_CLASS).tagByFilter(params)).withSelfRel();
+        return CollectionModel.of(dtoList, selfLink);
     }
 
     @GetMapping("/popular")
     @ResponseStatus(HttpStatus.OK)
-    public Tag mostPopularUserTagWithHighestCostOfAllOrders() {
-        return tagService.getMostPopularTagWithHighestCostOfAllOrders();
+    public TagDto mostPopularUserTagWithHighestCostOfAllOrders() {
+        Tag popularTag = tagService.getMostPopularTagWithHighestCostOfAllOrders();
+        TagDto tagDto = tagDtoConverter.toDto(popularTag);
+        tagDtoLinkBuilder.buildLinks(tagDto);
+        return tagDto;
     }
 }
