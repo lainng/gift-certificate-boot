@@ -1,15 +1,24 @@
 package com.piatnitsa.controller;
 
+import com.piatnitsa.dto.GiftCertificateDto;
+import com.piatnitsa.dto.converter.DtoConverter;
 import com.piatnitsa.entity.GiftCertificate;
 import com.piatnitsa.exception.IncorrectParameterException;
+import com.piatnitsa.hateoas.LinkBuilder;
 import com.piatnitsa.service.GiftCertificateService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.CollectionModel;
+import org.springframework.hateoas.Link;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
+
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 /**
  * This class is an endpoint of the API which allows to perform CRUD operations on {@link GiftCertificate}.
@@ -22,11 +31,18 @@ import java.util.List;
 @RestController
 @RequestMapping("/certificates")
 public class GiftCertificateController {
+    private static final Class<GiftCertificateController> CERTIFICATE_CONTROLLER_CLASS = GiftCertificateController.class;
     private final GiftCertificateService certificateService;
+    private final DtoConverter<GiftCertificateDto, GiftCertificate> certificateDtoConverter;
+    private final LinkBuilder<GiftCertificateDto> certificateDtoLinkBuilder;
 
     @Autowired
-    public GiftCertificateController(GiftCertificateService certificateService) {
+    public GiftCertificateController(GiftCertificateService certificateService,
+                                     DtoConverter<GiftCertificateDto, GiftCertificate> certificateDtoConverter,
+                                     LinkBuilder<GiftCertificateDto> certificateDtoLinkBuilder) {
         this.certificateService = certificateService;
+        this.certificateDtoConverter = certificateDtoConverter;
+        this.certificateDtoLinkBuilder = certificateDtoLinkBuilder;
     }
 
     /**
@@ -36,8 +52,11 @@ public class GiftCertificateController {
      * @throws IncorrectParameterException if specified ID is not valid.
      */
     @GetMapping("/{id}")
-    public GiftCertificate certificateById(@PathVariable long id) throws IncorrectParameterException {
-       return certificateService.getById(id);
+    public GiftCertificateDto certificateById(@PathVariable long id) {
+       GiftCertificate certificate = certificateService.getById(id);
+       GiftCertificateDto dto = certificateDtoConverter.toDto(certificate);
+       certificateDtoLinkBuilder.buildLinks(dto);
+       return dto;
     }
 
     /**
@@ -45,8 +64,14 @@ public class GiftCertificateController {
      * @return a {@link List} of {@link GiftCertificate} entities.
      */
     @GetMapping
-    public List<GiftCertificate> allCertificates() {
-        return certificateService.getAll();
+    public CollectionModel<GiftCertificateDto> allCertificates() {
+        List<GiftCertificate> certificates = certificateService.getAll();
+        List<GiftCertificateDto> dtoList = certificates.stream()
+                .map(certificateDtoConverter::toDto)
+                .peek(certificateDtoLinkBuilder::buildLinks)
+                .collect(Collectors.toList());
+        Link selfLink = linkTo(methodOn(CERTIFICATE_CONTROLLER_CLASS).allCertificates()).withSelfRel();
+        return CollectionModel.of(dtoList, selfLink);
     }
 
     /**
@@ -56,9 +81,12 @@ public class GiftCertificateController {
      * @throws IncorrectParameterException if the {@link GiftCertificate} entity contains incorrect information.
      */
     @PostMapping
-    public ResponseEntity<String> createCertificate(@RequestBody GiftCertificate certificate) {
-        certificateService.insert(certificate);
-        return ResponseEntity.status(HttpStatus.CREATED).body("Success");
+    @ResponseStatus(HttpStatus.CREATED)
+    public GiftCertificateDto createCertificate(@RequestBody GiftCertificate certificate) {
+        GiftCertificate savedCertificate = certificateService.insert(certificate);
+        GiftCertificateDto dto = certificateDtoConverter.toDto(savedCertificate);
+        certificateDtoLinkBuilder.buildLinks(dto);
+        return dto;
     }
 
     /**
@@ -68,7 +96,8 @@ public class GiftCertificateController {
      * @throws IncorrectParameterException if specified ID is not valid.
      */
     @DeleteMapping("/{id}")
-    public ResponseEntity<Object> deleteCertificateById(@PathVariable long id) {
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public ResponseEntity<Void> deleteCertificateById(@PathVariable long id) {
         certificateService.removeById(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
@@ -81,10 +110,13 @@ public class GiftCertificateController {
      * @throws IncorrectParameterException if the {@link GiftCertificate} entity contains incorrect information.
      */
     @PatchMapping("/{id}")
-    public ResponseEntity<String> updateCertificate(@PathVariable long id,
-                                                    @RequestBody GiftCertificate certificate) {
-        certificateService.update(id, certificate);
-        return ResponseEntity.status(HttpStatus.CREATED).body("Success");
+    @ResponseStatus(HttpStatus.OK)
+    public GiftCertificateDto updateCertificate(@PathVariable long id,
+                                                @RequestBody GiftCertificate certificate) {
+        GiftCertificate updatedCertificate = certificateService.update(id, certificate);
+        GiftCertificateDto dto = certificateDtoConverter.toDto(updatedCertificate);
+        certificateDtoLinkBuilder.buildLinks(dto);
+        return dto;
     }
 
     /**
@@ -94,7 +126,14 @@ public class GiftCertificateController {
      * @throws IncorrectParameterException if request parameters contains incorrect parameter values.
      */
     @GetMapping("/filter")
-    public List<GiftCertificate> certificateByFilter(@RequestParam MultiValueMap<String, String> params) {
-        return certificateService.doFilter(params);
+    @ResponseStatus(HttpStatus.OK)
+    public CollectionModel<GiftCertificateDto> certificateByFilter(@RequestParam MultiValueMap<String, String> params) {
+        List<GiftCertificate> filteredCertificates = certificateService.doFilter(params);
+        List<GiftCertificateDto> dtoList = filteredCertificates.stream()
+                .map(certificateDtoConverter::toDto)
+                .peek(certificateDtoLinkBuilder::buildLinks)
+                .collect(Collectors.toList());
+        Link selfLink = linkTo(methodOn(CERTIFICATE_CONTROLLER_CLASS).certificateByFilter(params)).withSelfRel();
+        return CollectionModel.of(dtoList, selfLink);
     }
 }
