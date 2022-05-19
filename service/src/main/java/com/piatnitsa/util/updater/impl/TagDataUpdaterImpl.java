@@ -34,8 +34,13 @@ public class TagDataUpdaterImpl implements DataUpdater<Tag> {
             if (tagFromDb.isPresent()) {
                 updatableList.add(tagFromDb.get());
             } else {
+                tag.setName(capitalizeTagName(tag.getName()));
                 updatableList.add(tag);
             }
         }
+    }
+
+    private String capitalizeTagName(String tagName) {
+        return tagName.substring(0, 1).toUpperCase() + tagName.substring(1);
     }
 }

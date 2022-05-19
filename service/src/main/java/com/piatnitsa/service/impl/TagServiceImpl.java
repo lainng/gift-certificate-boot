@@ -34,6 +34,7 @@ public class TagServiceImpl extends AbstractService<Tag> implements TagService {
         if (isTagExist) {
             throw new DuplicateEntityException(ExceptionMessageKey.TAG_EXIST);
         }
+        entity.setName(capitalizeTagName(entity.getName()));
         tagDao.insert(entity);
         return entity;
     }
@@ -51,5 +52,9 @@ public class TagServiceImpl extends AbstractService<Tag> implements TagService {
             throw new NoSuchEntityException(ExceptionMessageKey.TAG_NOT_FOUND);
         }
         return optionalTag.get();
+    }
+
+    private String capitalizeTagName(String tagName) {
+        return tagName.substring(0, 1).toUpperCase() + tagName.substring(1);
     }
 }
