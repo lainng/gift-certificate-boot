@@ -57,7 +57,7 @@ public class GiftCertificateServiceImpl extends AbstractService<GiftCertificate>
     }
 
     @Override
-    public void update(long id, GiftCertificate newDataCertificate) {
+    public GiftCertificate update(long id, GiftCertificate newDataCertificate) {
         newDataCertificate.setId(id);
         ExceptionMessageHolder exceptionMessageHolder = GiftCertificateValidator.validateForUpdate(newDataCertificate);
         if (exceptionMessageHolder.hasMessages()) {
@@ -71,7 +71,7 @@ public class GiftCertificateServiceImpl extends AbstractService<GiftCertificate>
         GiftCertificate currentCertificate = optionalGiftCertificate.get();
         currentCertificate.setId(id);
         certificateDataUpdater.updateData(currentCertificate, newDataCertificate);
-        certificateDao.update(currentCertificate);
+        return certificateDao.update(currentCertificate);
     }
 
     @Override
