@@ -14,6 +14,7 @@ import java.util.Map;
 
 @Component
 public class TagQueryCreatorImpl extends AbstractQueryCreator<Tag> implements QueryCreator<Tag> {
+    private static final String NAME_FIELD = "name";
 
     @Override
     public CriteriaQuery<Tag> createFilteringGetQuery(MultiValueMap<String, String> params, CriteriaBuilder criteriaBuilder) {
@@ -30,11 +31,11 @@ public class TagQueryCreatorImpl extends AbstractQueryCreator<Tag> implements Qu
                     .orElse("");
             switch (filterParam) {
                 case FilterParameter.TAG_NAME: {
-                    predicates.add(addLikePredicate(criteriaBuilder, root.get("name"), paramValue));
+                    predicates.add(addLikePredicate(criteriaBuilder, root.get(NAME_FIELD), paramValue));
                     break;
                 }
                 case FilterParameter.SORT_BY_TAG_NAME: {
-                    orders.add(addOrder(criteriaBuilder, root.get("name"), paramValue));
+                    orders.add(addOrder(criteriaBuilder, root.get(NAME_FIELD), paramValue));
                     break;
                 }
             }

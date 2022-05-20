@@ -1,6 +1,7 @@
 package com.piatnitsa.dao.creator.impl;
 
 import com.piatnitsa.dao.creator.AbstractQueryCreator;
+import com.piatnitsa.dao.creator.FilterParameter;
 import com.piatnitsa.dao.creator.QueryCreator;
 import com.piatnitsa.entity.GiftCertificate;
 import org.springframework.stereotype.Component;
@@ -15,6 +16,9 @@ import java.util.Map;
 public class GiftCertificateQueryCreatorImpl
         extends AbstractQueryCreator<GiftCertificate>
         implements QueryCreator<GiftCertificate> {
+    private static final String TAGS_FIELD = "tags";
+    private static final String NAME_FIELD = "name";
+    private static final String CREATE_DATE_FIELD = "createDate";
 
     @Override
     public CriteriaQuery<GiftCertificate> createFilteringGetQuery(MultiValueMap<String, String> params,
@@ -31,29 +35,32 @@ public class GiftCertificateQueryCreatorImpl
                     .findFirst()
                     .orElse("");
             switch (filterParam) {
-                case "name": {
-                    predicates.add(addLikePredicate(criteriaBuilder, root.get("name"), paramValue));
+                case FilterParameter.NAME: {
+                    predicates.add(addLikePredicate(criteriaBuilder, root.get(NAME_FIELD), paramValue));
                     break;
                 }
-                case "description": {
-                    predicates.add(addLikePredicate(criteriaBuilder, root.get("description"), paramValue));
+                case FilterParameter.DESCRIPTION: {
+                    predicates.add(addLikePredicate(criteriaBuilder, root.get(FilterParameter.DESCRIPTION), paramValue));
                     break;
                 }
-                case "tag_name": {
+                case FilterParameter.TAG_NAME: {
                     List<String> tagNames = entry.getValue();
                     tagNames.forEach(
                             (tagName) -> predicates.add(
-                                    addLikePredicate(criteriaBuilder, root.join("tags").get("name"), tagName)
+                                    addLikePredicate(
+                                            criteriaBuilder, root.join(TAGS_FIELD).get(FilterParameter.NAME),
+                                            tagName
+                                    )
                             )
                     );
                     break;
                 }
-                case "name_sort": {
-                    orders.add(addOrder(criteriaBuilder, root.get("name"), paramValue));
+                case FilterParameter.NAME_SORT: {
+                    orders.add(addOrder(criteriaBuilder, root.get(NAME_FIELD), paramValue));
                     break;
                 }
-                case "date_sort": {
-                    orders.add(addOrder(criteriaBuilder, root.get("createDate"), paramValue));
+                case FilterParameter.DATE_SORT:   {
+                    orders.add(addOrder(criteriaBuilder, root.get(CREATE_DATE_FIELD), paramValue));
                     break;
                 }
             }
