@@ -19,5 +19,5 @@ public interface GiftCertificateService extends CRUDService<GiftCertificate> {
      * @return {@link List} of {@link GiftCertificate}.
      * @throws IncorrectParameterException if specified parameters contains incorrect parameters.
      */
-    List<GiftCertificate> doFilter(MultiValueMap<String, String> params) throws IncorrectParameterException;
+    List<GiftCertificate> doFilter(MultiValueMap<String, String> params, int page, int size) throws IncorrectParameterException;
 }

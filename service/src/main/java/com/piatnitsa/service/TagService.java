@@ -19,7 +19,7 @@ public interface TagService extends CRDService<Tag> {
      * @return {@link List} of {@link Tag}.
      * @throws IncorrectParameterException if specified parameters contains incorrect parameters.
      */
-    List<Tag> doFilter(MultiValueMap<String, String> params);
+    List<Tag> doFilter(MultiValueMap<String, String> params, int page, int size);
 
     Tag getMostPopularTagWithHighestCostOfAllOrders();
 }

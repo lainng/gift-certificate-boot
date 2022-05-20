@@ -24,7 +24,7 @@ public interface CRDService<T> {
      * Retrieves a {@link List} of {@link T} objects.
      * @return A {@link List} of {@link T} objects.
      */
-    List<T> getAll();
+    List<T> getAll(int page, int size);
 
     /**
      * Method for saving an {@link T} entity

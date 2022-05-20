@@ -1,5 +1,6 @@
 package com.piatnitsa.dao;
 
+import org.springframework.data.domain.Pageable;
 import org.springframework.util.MultiValueMap;
 
 import java.util.List;
@@ -25,7 +26,7 @@ public interface CRDDao<T> {
      * Retrieves a {@link List} of {@link T} objects.
      * @return A {@link List} of {@link T} objects.
      */
-    List<T> getAll();
+    List<T> getAll(Pageable pageable);
 
     /**
      * Method for saving an {@link T} entity.
@@ -45,5 +46,5 @@ public interface CRDDao<T> {
      * @param params request parameters from URL.
      * @return {@link List} of {@link T}.
      */
-    List<T> getWithFilter(MultiValueMap<String, String> params);
+    List<T> getWithFilter(MultiValueMap<String, String> params, Pageable pageable);
 }
