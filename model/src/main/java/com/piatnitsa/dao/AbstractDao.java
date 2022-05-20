@@ -1,6 +1,7 @@
 package com.piatnitsa.dao;
 
 import com.piatnitsa.dao.creator.QueryCreator;
+import org.springframework.data.domain.Pageable;
 import org.springframework.util.MultiValueMap;
 
 import javax.persistence.EntityManager;
@@ -37,8 +38,10 @@ public abstract class AbstractDao<T> implements CRDDao<T> {
     }
 
     @Override
-    public List<T> getAll() {
+    public List<T> getAll(Pageable pageable) {
         return entityManager.createQuery("select e from " + entityType.getSimpleName() + " e", entityType)
+                .setFirstResult((int) pageable.getOffset())
+                .setMaxResults(pageable.getPageSize())
                 .getResultList();
     }
 
@@ -57,12 +60,14 @@ public abstract class AbstractDao<T> implements CRDDao<T> {
     }
 
     @Override
-    public List<T> getWithFilter(MultiValueMap<String, String> params) {
+    public List<T> getWithFilter(MultiValueMap<String, String> params, Pageable pageable) {
         CriteriaQuery<T> criteriaQuery = queryCreator.createFilteringGetQuery(
                 params,
                 entityManager.getCriteriaBuilder()
         );
         return entityManager.createQuery(criteriaQuery)
+                .setFirstResult((int) pageable.getOffset())
+                .setMaxResults(pageable.getPageSize())
                 .getResultStream()
                 .distinct()
                 .collect(Collectors.toList());

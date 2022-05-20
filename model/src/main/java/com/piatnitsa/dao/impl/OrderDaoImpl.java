@@ -3,6 +3,7 @@ package com.piatnitsa.dao.impl;
 import com.piatnitsa.dao.AbstractDao;
 import com.piatnitsa.dao.OrderDao;
 import com.piatnitsa.entity.Order;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 import org.springframework.util.MultiValueMap;
 
@@ -18,9 +19,11 @@ public class OrderDaoImpl extends AbstractDao<Order> implements OrderDao {
     }
 
     @Override
-    public List<Order> findByUserId(long userId) {
+    public List<Order> findByUserId(long userId, Pageable pageable) {
         return entityManager.createQuery(QUERY_SELECT_BY_USER_ID, entityType)
                 .setParameter("userId", userId)
+                .setFirstResult((int) pageable.getOffset())
+                .setMaxResults(pageable.getPageSize())
                 .getResultList();
     }
 
@@ -30,7 +33,7 @@ public class OrderDaoImpl extends AbstractDao<Order> implements OrderDao {
     }
 
     @Override
-    public List<Order> getAll() {
+    public List<Order> getAll(Pageable pageable) {
         throw new UnsupportedOperationException();
     }
 
@@ -40,7 +43,7 @@ public class OrderDaoImpl extends AbstractDao<Order> implements OrderDao {
     }
 
     @Override
-    public List<Order> getWithFilter(MultiValueMap<String, String> params) {
+    public List<Order> getWithFilter(MultiValueMap<String, String> params, Pageable pageable) {
         throw new UnsupportedOperationException();
     }
 }

@@ -3,6 +3,7 @@ package com.piatnitsa.dao.impl;
 import com.piatnitsa.dao.AbstractDao;
 import com.piatnitsa.dao.UserDao;
 import com.piatnitsa.entity.User;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 import org.springframework.util.MultiValueMap;
 
@@ -26,7 +27,7 @@ public class UserDaoImpl extends AbstractDao<User> implements UserDao {
     }
 
     @Override
-    public List<User> getWithFilter(MultiValueMap<String, String> params) {
+    public List<User> getWithFilter(MultiValueMap<String, String> params, Pageable pageable) {
         throw new UnsupportedOperationException();
     }
 }
