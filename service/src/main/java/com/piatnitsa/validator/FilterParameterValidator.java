@@ -1,5 +1,6 @@
 package com.piatnitsa.validator;
 
+import com.piatnitsa.exception.ExceptionMessageHolder;
 import com.piatnitsa.exception.ExceptionMessageKey;
 import com.piatnitsa.exception.IncorrectParameterException;
 import org.springframework.util.MultiValueMap;
@@ -21,7 +22,8 @@ public class FilterParameterValidator {
      * @param filterParams filtering parameters.
      * @throws IncorrectParameterException if sort type not equal "asc" or "desc".
      */
-    public static void validateSortType(MultiValueMap<String, String> filterParams) {
+    public static ExceptionMessageHolder validateSortType(MultiValueMap<String, String> filterParams) {
+        ExceptionMessageHolder holder = new ExceptionMessageHolder();
         for (Map.Entry<String, List<String>> entry : filterParams.entrySet()) {
             String key = entry.getKey().toLowerCase();
             switch (key) {
@@ -31,18 +33,38 @@ public class FilterParameterValidator {
                     List<String> sortTypeList = entry.getValue();
                     sortTypeList.stream()
                             .findFirst()
-                            .ifPresent(FilterParameterValidator::validateType);
+                            .ifPresent(t -> validateType(t, holder));
                     break;
                 }
             }
         }
+        return holder;
     }
 
-    private static void validateType(String type) {
+    public static ExceptionMessageHolder validatePaginationParameters(int page, int size) {
+        ExceptionMessageHolder holder = new ExceptionMessageHolder();
+        validatePage(page, holder);
+        validateSize(size, holder);
+        return holder;
+    }
+
+    private static void validateType(String type, ExceptionMessageHolder holder) {
         if (type == null
                 || type.isEmpty()
                 || (!type.equalsIgnoreCase(ASCENDING) && !type.equalsIgnoreCase(DESCENDING))) {
-            throw new IncorrectParameterException(ExceptionMessageKey.BAD_SORT_TYPE);
+            holder.putException(ExceptionMessageKey.BAD_SORT_TYPE, type);
+        }
+    }
+
+    private static void validatePage(int page, ExceptionMessageHolder holder) {
+        if (page < 0) {
+            holder.putException(ExceptionMessageKey.BAD_PAGE_VALUE, page);
+        }
+    }
+
+    private static void validateSize(int size, ExceptionMessageHolder holder) {
+        if (size < 1) {
+            holder.putException(ExceptionMessageKey.BAD_SIZE_VALUE, size);
         }
     }
 }
