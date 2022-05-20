@@ -1,10 +1,13 @@
 package com.piatnitsa.entity;
 
+import org.hibernate.envers.Audited;
+
 import javax.persistence.*;
 import java.util.Objects;
 
 @Entity
 @Table(name = "`user`")
+@Audited
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

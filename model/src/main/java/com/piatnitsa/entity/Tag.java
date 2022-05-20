@@ -1,5 +1,7 @@
 package com.piatnitsa.entity;
 
+import org.hibernate.envers.Audited;
+
 import javax.persistence.*;
 import java.util.Objects;
 
@@ -11,6 +13,7 @@ import java.util.Objects;
  */
 @Entity
 @Table(name = "tag")
+@Audited
 public class Tag {
 
     @Id

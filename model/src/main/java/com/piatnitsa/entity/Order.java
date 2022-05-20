@@ -1,5 +1,7 @@
 package com.piatnitsa.entity;
 
+import org.hibernate.envers.Audited;
+
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -7,6 +9,7 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "`order`")
+@Audited
 public class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
