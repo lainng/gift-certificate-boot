@@ -31,6 +31,7 @@ public final class ExceptionMessageKey {
 
     public static final String USER_NOT_FOUND = "user.notFound";
 
-    public static final String INVALID_PAGINATION = "pagination.invalid";
+    public static final String BAD_PAGE_VALUE = "pagination.invalidPage";
+    public static final String BAD_SIZE_VALUE = "pagination.invalidSize";
 
 }
