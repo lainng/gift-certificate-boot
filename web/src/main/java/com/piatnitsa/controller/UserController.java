@@ -36,13 +36,15 @@ public class UserController {
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public CollectionModel<UserDto> allUsers() {
-        List<User> users = userService.getAll();
+    public CollectionModel<UserDto> allUsers(
+            @RequestParam(value = "page", defaultValue = "0", required = false) int page,
+            @RequestParam(value = "size", defaultValue = "5", required = false) int size) {
+        List<User> users = userService.getAll(page, size);
         List<UserDto> dtoList = users.stream()
                 .map(userDtoConverter::toDto)
                 .peek(userDtoLinkBuilder::buildLinks)
                 .collect(Collectors.toList());
-        Link selfLink = linkTo(methodOn(USER_CONTROLLER_CLASS).allUsers()).withSelfRel();
+        Link selfLink = linkTo(methodOn(USER_CONTROLLER_CLASS).allUsers(page, size)).withSelfRel();
         return CollectionModel.of(dtoList, selfLink);
     }
 

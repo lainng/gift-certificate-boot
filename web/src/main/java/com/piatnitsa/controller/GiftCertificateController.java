@@ -64,13 +64,15 @@ public class GiftCertificateController {
      * @return a {@link List} of {@link GiftCertificate} entities.
      */
     @GetMapping
-    public CollectionModel<GiftCertificateDto> allCertificates() {
-        List<GiftCertificate> certificates = certificateService.getAll();
+    public CollectionModel<GiftCertificateDto> allCertificates(
+            @RequestParam(value = "page", defaultValue = "0", required = false) int page,
+            @RequestParam(value = "size", defaultValue = "5", required = false) int size) {
+        List<GiftCertificate> certificates = certificateService.getAll(page, size);
         List<GiftCertificateDto> dtoList = certificates.stream()
                 .map(certificateDtoConverter::toDto)
                 .peek(certificateDtoLinkBuilder::buildLinks)
                 .collect(Collectors.toList());
-        Link selfLink = linkTo(methodOn(CERTIFICATE_CONTROLLER_CLASS).allCertificates()).withSelfRel();
+        Link selfLink = linkTo(methodOn(CERTIFICATE_CONTROLLER_CLASS).allCertificates(page, size)).withSelfRel();
         return CollectionModel.of(dtoList, selfLink);
     }
 
@@ -127,13 +129,16 @@ public class GiftCertificateController {
      */
     @GetMapping("/filter")
     @ResponseStatus(HttpStatus.OK)
-    public CollectionModel<GiftCertificateDto> certificateByFilter(@RequestParam MultiValueMap<String, String> params) {
-        List<GiftCertificate> filteredCertificates = certificateService.doFilter(params);
+    public CollectionModel<GiftCertificateDto> certificateByFilter(
+            @RequestParam MultiValueMap<String, String> params,
+            @RequestParam(name = "page", defaultValue = "0", required = false) int page,
+            @RequestParam(name = "size", defaultValue = "5", required = false) int size) {
+        List<GiftCertificate> filteredCertificates = certificateService.doFilter(params, page, size);
         List<GiftCertificateDto> dtoList = filteredCertificates.stream()
                 .map(certificateDtoConverter::toDto)
                 .peek(certificateDtoLinkBuilder::buildLinks)
                 .collect(Collectors.toList());
-        Link selfLink = linkTo(methodOn(CERTIFICATE_CONTROLLER_CLASS).certificateByFilter(params)).withSelfRel();
+        Link selfLink = linkTo(methodOn(CERTIFICATE_CONTROLLER_CLASS).certificateByFilter(params, page, size)).withSelfRel();
         return CollectionModel.of(dtoList, selfLink);
     }
 }

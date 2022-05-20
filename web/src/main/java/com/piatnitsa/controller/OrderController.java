@@ -37,12 +37,15 @@ public class OrderController {
 
     @GetMapping("/users/{userId}")
     @ResponseStatus(HttpStatus.OK)
-    public CollectionModel<OrderDto> ordersByUserId(@PathVariable long userId) {
-        List<OrderDto> orders = orderService.getOrdersByUserId(userId).stream()
+    public CollectionModel<OrderDto> ordersByUserId(
+            @PathVariable long userId,
+            @RequestParam(name = "page", defaultValue = "0", required = false) int page,
+            @RequestParam(name = "size", defaultValue = "5", required = false) int size) {
+        List<OrderDto> orders = orderService.getOrdersByUserId(userId, page, size).stream()
                 .map(orderDtoConverter::toDto)
                 .peek(orderLinkBuilder::buildLinks)
                 .collect(Collectors.toList());
-        Link link = linkTo(methodOn(ORDER_CONTROLLER_CLASS).ordersByUserId(userId)).withSelfRel();
+        Link link = linkTo(methodOn(ORDER_CONTROLLER_CLASS).ordersByUserId(userId, page, size)).withSelfRel();
         return CollectionModel.of(orders, link);
     }
 

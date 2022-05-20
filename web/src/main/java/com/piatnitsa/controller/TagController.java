@@ -50,13 +50,15 @@ public class TagController {
      * @return a {@link List} of {@link Tag} entities.
      */
     @GetMapping
-    public CollectionModel<TagDto> allTags() {
-        List<Tag> tags = tagService.getAll();
+    public CollectionModel<TagDto> allTags(
+            @RequestParam(value = "page", defaultValue = "0", required = false) int page,
+            @RequestParam(value = "size", defaultValue = "5", required = false) int size) {
+        List<Tag> tags = tagService.getAll(page, size);
         List<TagDto> dtoList = tags.stream()
                 .map(tagDtoConverter::toDto)
                 .peek(tagDtoLinkBuilder::buildLinks)
                 .collect(Collectors.toList());
-        Link selfLink = linkTo(methodOn(TAG_CONTROLLER_CLASS).allTags()).withSelfRel();
+        Link selfLink = linkTo(methodOn(TAG_CONTROLLER_CLASS).allTags(page, size)).withSelfRel();
         return CollectionModel.of(dtoList, selfLink);
     }
 
@@ -110,13 +112,16 @@ public class TagController {
      */
     @GetMapping("/filter")
     @ResponseStatus(HttpStatus.OK)
-    public CollectionModel<TagDto> tagByFilter(@RequestParam MultiValueMap<String, String> params) {
-        List<Tag> tags = tagService.doFilter(params);
+    public CollectionModel<TagDto> tagByFilter(
+            @RequestParam MultiValueMap<String, String> params,
+            @RequestParam(name = "page", defaultValue = "0", required = false) int page,
+            @RequestParam(name = "size", defaultValue = "5", required = false) int size) {
+        List<Tag> tags = tagService.doFilter(params, page, size);
         List<TagDto> dtoList = tags.stream()
                 .map(tagDtoConverter::toDto)
                 .peek(tagDtoLinkBuilder::buildLinks)
                 .collect(Collectors.toList());
-        Link selfLink = linkTo(methodOn(TAG_CONTROLLER_CLASS).tagByFilter(params)).withSelfRel();
+        Link selfLink = linkTo(methodOn(TAG_CONTROLLER_CLASS).tagByFilter(params, page, size)).withSelfRel();
         return CollectionModel.of(dtoList, selfLink);
     }
 
