@@ -5,9 +5,13 @@ import com.piatnitsa.exception.ExceptionMessageHolder;
 import com.piatnitsa.exception.ExceptionMessageKey;
 import com.piatnitsa.exception.IncorrectParameterException;
 import com.piatnitsa.exception.NoSuchEntityException;
+import com.piatnitsa.validator.FilterParameterValidator;
 import com.piatnitsa.validator.IdentifiableValidator;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.util.MultiValueMap;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 /**
@@ -35,8 +39,14 @@ public abstract class AbstractService<T> implements CRDService<T> {
     }
 
     @Override
-    public List<T> getAll() {
-        return dao.getAll();
+    public List<T> getAll(int page, int size) {
+        ExceptionMessageHolder holder = FilterParameterValidator.validatePaginationParameters(page, size);
+        if (holder.hasMessages()) {
+            throw new IncorrectParameterException(holder);
+        }
+        PageRequest pageRequest = PageRequest.of(page, size);
+        return dao.getAll(pageRequest);
+
     }
 
     @Override
@@ -47,6 +57,17 @@ public abstract class AbstractService<T> implements CRDService<T> {
             throw new NoSuchEntityException(ExceptionMessageKey.NO_ENTITY);
         }
         dao.removeById(id);
+    }
+
+    public List<T> doFilter(MultiValueMap<String, String> params, int page, int size) {
+        ExceptionMessageHolder holder = FilterParameterValidator.validateSortType(params);
+        Map<String, Object[]> messageMap = holder.getMessages();
+        messageMap.putAll(FilterParameterValidator.validatePaginationParameters(page, size).getMessages());
+        if (holder.hasMessages()) {
+            throw new IncorrectParameterException(holder);
+        }
+        PageRequest pageRequest = PageRequest.of(page, size);
+        return dao.getWithFilter(params, pageRequest);
     }
 
     protected void validateId(long id) {

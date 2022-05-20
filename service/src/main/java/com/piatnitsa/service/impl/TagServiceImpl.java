@@ -5,13 +5,10 @@ import com.piatnitsa.entity.Tag;
 import com.piatnitsa.exception.*;
 import com.piatnitsa.service.AbstractService;
 import com.piatnitsa.service.TagService;
-import com.piatnitsa.validator.FilterParameterValidator;
 import com.piatnitsa.validator.TagValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.util.MultiValueMap;
 
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -37,12 +34,6 @@ public class TagServiceImpl extends AbstractService<Tag> implements TagService {
         entity.setName(capitalizeTagName(entity.getName()));
         tagDao.insert(entity);
         return entity;
-    }
-
-    @Override
-    public List<Tag> doFilter(MultiValueMap<String, String> params) {
-        FilterParameterValidator.validateSortType(params);
-        return tagDao.getWithFilter(params);
     }
 
     @Override

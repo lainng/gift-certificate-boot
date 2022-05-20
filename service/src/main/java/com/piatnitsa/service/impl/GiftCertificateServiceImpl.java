@@ -11,11 +11,9 @@ import com.piatnitsa.service.AbstractService;
 import com.piatnitsa.service.GiftCertificateService;
 import com.piatnitsa.util.TimestampHandler;
 import com.piatnitsa.util.updater.DataUpdater;
-import com.piatnitsa.validator.FilterParameterValidator;
 import com.piatnitsa.validator.GiftCertificateValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.util.MultiValueMap;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -72,11 +70,5 @@ public class GiftCertificateServiceImpl extends AbstractService<GiftCertificate>
         currentCertificate.setId(id);
         certificateDataUpdater.updateData(currentCertificate, newDataCertificate);
         return certificateDao.update(currentCertificate);
-    }
-
-    @Override
-    public List<GiftCertificate> doFilter(MultiValueMap<String, String> params) {
-        FilterParameterValidator.validateSortType(params);
-        return certificateDao.getWithFilter(params);
     }
 }

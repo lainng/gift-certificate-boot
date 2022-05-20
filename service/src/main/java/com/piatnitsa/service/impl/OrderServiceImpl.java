@@ -13,10 +13,14 @@ import com.piatnitsa.exception.NoSuchEntityException;
 import com.piatnitsa.service.AbstractService;
 import com.piatnitsa.service.OrderService;
 import com.piatnitsa.util.TimestampHandler;
+import com.piatnitsa.validator.FilterParameterValidator;
+import com.piatnitsa.validator.IdentifiableValidator;
 import com.piatnitsa.validator.OrderValidator;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Component
@@ -35,9 +39,15 @@ public class OrderServiceImpl extends AbstractService<Order> implements OrderSer
     }
 
     @Override
-    public List<Order> getOrdersByUserId(long userId) {
-        validateId(userId);
-        return orderDao.findByUserId(userId);
+    public List<Order> getOrdersByUserId(long userId, int page, int size) {
+        ExceptionMessageHolder messageHolder = IdentifiableValidator.validateId(userId);
+        Map<String, Object[]> messageMap = messageHolder.getMessages();
+        messageMap.putAll(FilterParameterValidator.validatePaginationParameters(page, size).getMessages());
+        if (messageHolder.hasMessages()) {
+            throw new IncorrectParameterException(messageHolder);
+        }
+        PageRequest pageRequest = PageRequest.of(page, size);
+        return orderDao.findByUserId(userId, pageRequest);
     }
 
     @Override
