@@ -3,10 +3,7 @@ package com.piatnitsa.service.impl;
 import com.piatnitsa.dao.GiftCertificateDao;
 import com.piatnitsa.entity.GiftCertificate;
 import com.piatnitsa.entity.Tag;
-import com.piatnitsa.exception.ExceptionMessageHolder;
-import com.piatnitsa.exception.ExceptionMessageKey;
-import com.piatnitsa.exception.IncorrectParameterException;
-import com.piatnitsa.exception.NoSuchEntityException;
+import com.piatnitsa.exception.*;
 import com.piatnitsa.service.AbstractService;
 import com.piatnitsa.service.GiftCertificateService;
 import com.piatnitsa.util.TimestampHandler;
@@ -21,7 +18,9 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class GiftCertificateServiceImpl extends AbstractService<GiftCertificate> implements GiftCertificateService {
+public class GiftCertificateServiceImpl
+        extends AbstractService<GiftCertificate>
+        implements GiftCertificateService {
     private final GiftCertificateDao certificateDao;
     private final DataUpdater<GiftCertificate> certificateDataUpdater;
     private final DataUpdater<Tag> tagDataUpdater;
@@ -43,6 +42,11 @@ public class GiftCertificateServiceImpl extends AbstractService<GiftCertificate>
             throw new IncorrectParameterException(exceptionMessageHolder);
         }
 
+        boolean isGiftCertificateExist = certificateDao.getByName(entity.getName()).isPresent();
+        if (isGiftCertificateExist) {
+            throw new DuplicateEntityException(ExceptionMessageKey.GIFT_CERTIFICATE_EXIST);
+        }
+
         LocalDateTime currentTimestamp = TimestampHandler.getCurrentTimestamp();
         entity.setCreateDate(currentTimestamp);
         entity.setLastUpdateDate(currentTimestamp);
@@ -50,8 +54,7 @@ public class GiftCertificateServiceImpl extends AbstractService<GiftCertificate>
         List<Tag> newTags = new ArrayList<>(entity.getTags().size());
         tagDataUpdater.updateDataList(newTags, entity.getTags());
         entity.setTags(newTags);
-        certificateDao.insert(entity);
-        return entity;
+        return certificateDao.insert(entity);
     }
 
     @Override
@@ -70,5 +73,20 @@ public class GiftCertificateServiceImpl extends AbstractService<GiftCertificate>
         currentCertificate.setId(id);
         certificateDataUpdater.updateData(currentCertificate, newDataCertificate);
         return certificateDao.update(currentCertificate);
+    }
+
+    @Override
+    public GiftCertificate getByName(String name) {
+        ExceptionMessageHolder holder = new ExceptionMessageHolder();
+        GiftCertificateValidator.validateName(name, holder);
+        if (holder.hasMessages()) {
+            throw new IncorrectParameterException(holder);
+        }
+
+        Optional<GiftCertificate> optionalGiftCertificate = certificateDao.getByName(name);
+        if (!optionalGiftCertificate.isPresent()) {
+            throw new NoSuchEntityException(ExceptionMessageKey.GIFT_CERTIFICATE_NOT_FOUND);
+        }
+        return optionalGiftCertificate.get();
     }
 }
