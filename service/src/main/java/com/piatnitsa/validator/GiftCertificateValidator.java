@@ -19,7 +19,7 @@ public class GiftCertificateValidator {
     private static final int MAX_LENGTH_NAME = 30;
     private static final int MIN_LENGTH_NAME = 3;
     private static final int MIN_LENGTH_DESCRIPTION = 5;
-    private static final int MAX_LENGTH_DESCRIPTION = 100;
+    private static final int MAX_LENGTH_DESCRIPTION = 200;
     private static final int MAX_SCALE = 2;
     private static final BigDecimal MIN_PRICE = new BigDecimal("0.01");
     private static final BigDecimal MAX_PRICE = new BigDecimal("999999.99");

@@ -11,7 +11,7 @@ import com.piatnitsa.exception.IncorrectParameterException;
  * @version 1.0
  */
 public class TagValidator {
-    private static final int MAX_LENGTH_NAME = 20;
+    private static final int MAX_LENGTH_NAME = 30;
     private static final int MIN_LENGTH_NAME = 3;
 
     /**
