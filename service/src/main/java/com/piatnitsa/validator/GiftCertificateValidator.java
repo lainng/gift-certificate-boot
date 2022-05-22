@@ -84,7 +84,7 @@ public class GiftCertificateValidator {
         }
     }
 
-    private static void validateName(String name, ExceptionMessageHolder exMessage) {
+    public static void validateName(String name, ExceptionMessageHolder exMessage) {
         if (name == null
                 || name.length() < MIN_LENGTH_NAME || name.length() > MAX_LENGTH_NAME) {
             exMessage.putException(ExceptionMessageKey.BAD_GIFT_CERTIFICATE_NAME, name);
