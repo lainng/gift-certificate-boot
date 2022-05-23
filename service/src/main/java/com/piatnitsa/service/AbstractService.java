@@ -70,7 +70,7 @@ public abstract class AbstractService<T> implements CRDService<T> {
         return dao.getWithFilter(params, pageRequest);
     }
 
-    protected void validateId(long id) {
+    private void validateId(long id) {
         ExceptionMessageHolder messageHolder = IdentifiableValidator.validateId(id);
         if (messageHolder.hasMessages()) {
             throw new IncorrectParameterException(messageHolder);
