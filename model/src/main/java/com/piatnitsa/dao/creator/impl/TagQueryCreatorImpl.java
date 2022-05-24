@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Map;
 
 @Component
-public class TagQueryCreatorImpl extends AbstractQueryCreator<Tag> implements QueryCreator<Tag> {
+public class TagQueryCreatorImpl extends AbstractQueryCreator implements QueryCreator<Tag> {
     private static final String NAME_FIELD = "name";
 
     @Override

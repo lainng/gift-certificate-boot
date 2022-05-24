@@ -5,7 +5,7 @@ import javax.persistence.criteria.Expression;
 import javax.persistence.criteria.Order;
 import javax.persistence.criteria.Predicate;
 
-public abstract class AbstractQueryCreator<T> {
+public abstract class AbstractQueryCreator {
 
     protected Predicate addLikePredicate(CriteriaBuilder criteriaBuilder,
                                          Expression<String> expression,

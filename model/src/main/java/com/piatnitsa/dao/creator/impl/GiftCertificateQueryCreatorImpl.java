@@ -14,7 +14,7 @@ import java.util.Map;
 
 @Component
 public class GiftCertificateQueryCreatorImpl
-        extends AbstractQueryCreator<GiftCertificate>
+        extends AbstractQueryCreator
         implements QueryCreator<GiftCertificate> {
     private static final String TAGS_FIELD = "tags";
     private static final String NAME_FIELD = "name";
