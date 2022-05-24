@@ -3,10 +3,10 @@ package com.piatnitsa.exception;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.piatnitsa.config.language.ExceptionMessageTranslator;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.servlet.NoHandlerFoundException;
@@ -22,7 +22,8 @@ import java.util.Map;
 public class ExceptionsHandler {
 
     @ExceptionHandler(IncorrectParameterException.class)
-    public ResponseEntity<ErrorResponse> handleIncorrectParameterException(IncorrectParameterException ex) {
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorResponse handleIncorrectParameterException(IncorrectParameterException ex) {
         StringBuilder details = new StringBuilder();
         for (Map.Entry<String, Object[]> exceptionMsg : ex.getExceptionMessageHolder().getMessages().entrySet()) {
             String msgKey = exceptionMsg.getKey();
@@ -35,26 +36,25 @@ public class ExceptionsHandler {
             String detail = String.format(translatedMsg, exceptionMsg.getValue());
             details.append(detail).append(' ');
         }
-        ErrorResponse errorResponse = createResponse(HttpStatus.BAD_REQUEST, details.toString());
-        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+        return createResponse(HttpStatus.BAD_REQUEST, details.toString());
     }
 
     @ExceptionHandler(DuplicateEntityException.class)
-    public ResponseEntity<ErrorResponse> handleDuplicateEntityException(DuplicateEntityException ex) {
-        ErrorResponse errorResponse = createResponse(HttpStatus.CONFLICT, ex.getMessage());
-        return new ResponseEntity<>(errorResponse, HttpStatus.CONFLICT);
+    @ResponseStatus(HttpStatus.CONFLICT)
+    public ErrorResponse handleDuplicateEntityException(DuplicateEntityException ex) {
+        return createResponse(HttpStatus.CONFLICT, ex.getMessage());
     }
 
     @ExceptionHandler(NoSuchEntityException.class)
-    public ResponseEntity<ErrorResponse> handleNoSuchEntityException(NoSuchEntityException ex) {
-        ErrorResponse errorResponse = createResponse(HttpStatus.NOT_FOUND, ex.getMessage());
-        return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ErrorResponse handleNoSuchEntityException(NoSuchEntityException ex) {
+        return createResponse(HttpStatus.NOT_FOUND, ex.getMessage());
     }
 
     @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
-    public ResponseEntity<ErrorResponse> methodNotAllowedExceptionException() {
-        ErrorResponse errorResponse = createResponse(HttpStatus.METHOD_NOT_ALLOWED, "exception.notSupported");
-        return new ResponseEntity<>(errorResponse, HttpStatus.METHOD_NOT_ALLOWED);
+    @ResponseStatus(HttpStatus.METHOD_NOT_ALLOWED)
+    public ErrorResponse methodNotAllowedExceptionException() {
+        return createResponse(HttpStatus.METHOD_NOT_ALLOWED, "exception.notSupported");
     }
 
     @ExceptionHandler({
@@ -62,21 +62,21 @@ public class ExceptionsHandler {
             JsonProcessingException.class,
             HttpMessageNotReadableException.class
     })
-    public ResponseEntity<ErrorResponse> handleBadRequestExceptions() {
-        ErrorResponse errorResponse = createResponse(HttpStatus.BAD_REQUEST, "exception.badRequest");
-        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorResponse handleBadRequestExceptions() {
+        return createResponse(HttpStatus.BAD_REQUEST, "exception.badRequest");
     }
 
     @ExceptionHandler(NoHandlerFoundException.class)
-    public ResponseEntity<ErrorResponse> handleBadRequestException() {
-        ErrorResponse errorResponse = createResponse(HttpStatus.NOT_FOUND, "exception.noHandler");
-        return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ErrorResponse handleBadRequestException() {
+        return createResponse(HttpStatus.NOT_FOUND, "exception.noHandler");
     }
 
     @ExceptionHandler(UnsupportedOperationException.class)
-    public ResponseEntity<ErrorResponse> handleUnsupportedOperationException() {
-        ErrorResponse errorResponse = createResponse(HttpStatus.METHOD_NOT_ALLOWED, "exception.unsupportedOperation");
-        return new ResponseEntity<>(errorResponse, HttpStatus.METHOD_NOT_ALLOWED);
+    @ResponseStatus(HttpStatus.METHOD_NOT_ALLOWED)
+    public ErrorResponse handleUnsupportedOperationException() {
+        return createResponse(HttpStatus.METHOD_NOT_ALLOWED, "exception.unsupportedOperation");
     }
 
     private ErrorResponse createResponse(HttpStatus status, String messageCode) {
