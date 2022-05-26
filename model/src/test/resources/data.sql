@@ -22,7 +22,7 @@ INSERT INTO gift_certificate_with_tags (gift_certificate_id, tag_id)
 VALUES (2, 2);
 
 INSERT INTO gift_certificate_with_tags (gift_certificate_id, tag_id)
-VALUES (3, 3);
+VALUES (3, 4);
 
 INSERT INTO gift_certificate_with_tags (gift_certificate_id, tag_id)
 VALUES (3, 2);
