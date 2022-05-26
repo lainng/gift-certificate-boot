@@ -11,7 +11,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.TestPropertySource;
-import org.springframework.test.context.jdbc.Sql;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
@@ -20,7 +19,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 @SpringBootTest(classes = DaoTestConfig.class)
 @TestPropertySource("classpath:application-test.properties")
@@ -61,14 +61,6 @@ public class TagDaoImplTest {
         List<Tag> actual = tagDao.getAll(pageRequest);
         List<Tag> expected = Arrays.asList(TAG_1, TAG_2, TAG_3, TAG_4, TAG_5);
         assertEquals(expected, actual);
-    }
-
-    @Sql(statements = "delete from tag", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
-    @Sql(scripts = "/fillingTagTable.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
-    @Test
-    void getAll_emptyTagTable_thenReturnEmptyList() {
-        List<Tag> actual = tagDao.getAll(pageRequest);
-        assertTrue(actual.isEmpty());
     }
 
     @Test
