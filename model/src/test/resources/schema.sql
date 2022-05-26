@@ -24,19 +24,19 @@ create table gift_certificate_with_tags
             on update cascade on delete cascade
 );
 
-create table `user` (
-    id      bigint          not null primary key,
+create table "user" (
+    id      identity          not null primary key,
     name    varchar(50)     not null
 );
 
-create table `order` (
-    id                      bigint        not null primary key,
+create table "order" (
+    id                      identity          not null primary key,
     cost                    numeric(8, 2)   not null,
     purchase_time           timestamp       not null,
     gift_certificate_id     bigint
         references gift_certificate
         on update cascade on delete cascade,
     user_id                 bigint
-        references `user`
+        references "user"
         on update cascade on delete cascade
 )
