@@ -1,9 +1,14 @@
 package com.piatnitsa.service.impl;
 
+import com.piatnitsa.dao.creator.FilterParameter;
 import com.piatnitsa.dao.impl.GiftCertificateDaoImpl;
 import com.piatnitsa.entity.GiftCertificate;
 import com.piatnitsa.entity.Tag;
+import com.piatnitsa.exception.DuplicateEntityException;
 import com.piatnitsa.exception.NoSuchEntityException;
+import com.piatnitsa.util.TimestampHandler;
+import com.piatnitsa.util.updater.impl.GiftCertificateDataUpdaterImpl;
+import com.piatnitsa.util.updater.impl.TagDataUpdaterImpl;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -12,6 +17,8 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -26,19 +33,18 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 @ExtendWith(MockitoExtension.class)
 class GiftCertificateServiceImplTest {
 
-    @Mock
-    GiftCertificateDaoImpl certificateDao;
+    @Mock GiftCertificateDaoImpl certificateDao;
+    @Mock TimestampHandler timestampHandler;
+    @Mock TagDataUpdaterImpl tagDataUpdater;
+    @Mock GiftCertificateDataUpdaterImpl certificateDataUpdater;
 
     @InjectMocks
     GiftCertificateServiceImpl certificateService;
 
     private static final long NOT_EXISTED_ID = 999L;
-    private final LocalDateTime UPDATED_DATE = LocalDateTime.parse("2018-10-20T07:20:15.156");
+    private final LocalDateTime UPDATED_DATE = LocalDateTime.parse("2019-10-20T07:20:15.156");
     private static final String NOT_EXISTED_NAME = "not existed name";
-    private static final String INCORRECT_FILTER_PARAM = "incorrectParameter";
-    private static final String INCORRECT_FILTER_VALUE = "incorrectParameterValue";
-    private static final String PART_OF_CERTIFICATE_NAME = "giftCertificate";
-    private static final String PART_OF_DESCRIPTION = "description";
+    private static final String PART_OF_CERTIFICATE_NAME = "giftCertificate1";
     private static final String TAG_3_NAME = "tagName3";
     private static final String TAG_4_NAME = "tagName4";
     private static final String ASCENDING = "ASC";
@@ -59,6 +65,25 @@ class GiftCertificateServiceImplTest {
             "description2", new BigDecimal("999.99"), 2,
             LocalDateTime.parse("2018-10-20T07:20:15.156"), LocalDateTime.parse("2018-10-20T07:20:15.156"),
             Arrays.asList(new Tag(4, "tagName4"), new Tag(2, "tagName3")));
+
+    private final GiftCertificate NEW_ADDED_CERTIFICATE = new GiftCertificate(0, "giftCertificate3",
+            "description3", new BigDecimal("100.99"), 3, null, null,
+            Arrays.asList(new Tag(0, "tagName3"), new Tag(0, "tagName4")));
+
+    private final GiftCertificate BEFORE_INSERT_CERTIFICATE = new GiftCertificate(0, "giftCertificate3",
+            "description3", new BigDecimal("100.99"), 3,
+            LocalDateTime.parse("2019-10-20T07:20:15.156"), LocalDateTime.parse("2019-10-20T07:20:15.156"),
+            Arrays.asList(new Tag(2, "tagName3"), new Tag(4, "tagName4")));
+
+    private final GiftCertificate NEW_DATA_CERTIFICATE = new GiftCertificate(3, "giftCertificate22",
+            "description22", new BigDecimal("9999.99"), 22,
+            LocalDateTime.parse("2018-10-20T07:20:15.156"), LocalDateTime.parse("2018-10-20T07:20:15.156"),
+            Collections.singletonList(new Tag(0, "tagName4")));
+
+    private final GiftCertificate BEFORE_UPDATE_CERTIFICATE = new GiftCertificate(3, "giftCertificate22",
+            "description22", new BigDecimal("9999.99"), 22,
+            LocalDateTime.parse("2018-10-20T07:20:15.156"), LocalDateTime.parse("2019-10-20T07:20:15.156"),
+            Collections.singletonList(new Tag(2, "tagName4")));
 
     @Test
     void getById_thenOk() {
@@ -83,18 +108,64 @@ class GiftCertificateServiceImplTest {
     }
 
     @Test
-    void doFilter() {
+    void doFilter_thenOk() {
+        Pageable pageRequest = PageRequest.of(0, 5);
+
+        MultiValueMap<String, String> filterParams = new LinkedMultiValueMap<>();
+        filterParams.add(FilterParameter.NAME, PART_OF_CERTIFICATE_NAME);
+        filterParams.add(FilterParameter.NAME_SORT, ASCENDING);
+
+        List<GiftCertificate> expected = Collections.singletonList(GIFT_CERTIFICATE_1);
+        Mockito.when(certificateDao.getWithFilter(filterParams, pageRequest)).thenReturn(expected);
+        List<GiftCertificate> actual = certificateService.doFilter(filterParams, PAGE, SIZE);
+        assertEquals(expected, actual);
     }
 
     @Test
-    void insert() {
+    void insert_thenOk() {
+        List<Tag> newTags = Arrays.asList(new Tag(2, TAG_3_NAME), new Tag(4, TAG_4_NAME));
+        Mockito.when(tagDataUpdater.updateDataList(NEW_ADDED_CERTIFICATE.getTags())).thenReturn(newTags);
+        Mockito.when(certificateDao.getByName(GIFT_CERTIFICATE_2.getName())).thenReturn(Optional.empty());
+        Mockito.when(certificateDao.insert(BEFORE_INSERT_CERTIFICATE)).thenReturn(GIFT_CERTIFICATE_2);
+        Mockito.when(timestampHandler.getCurrentTimestamp()).thenReturn(UPDATED_DATE);
+        GiftCertificate actual = certificateService.insert(NEW_ADDED_CERTIFICATE);
+        assertEquals(GIFT_CERTIFICATE_2, actual);
     }
 
     @Test
-    void update() {
+    void insertExistedCertificate_thenThrowEx() {
+        Mockito.when(certificateDao.getByName(GIFT_CERTIFICATE_2.getName())).thenReturn(Optional.of(GIFT_CERTIFICATE_2));
+        assertThrows(DuplicateEntityException.class, () -> certificateService.insert(NEW_ADDED_CERTIFICATE));
     }
 
     @Test
-    void getByName() {
+    void update_thenOk() {
+        Mockito.when(certificateDao.getById(GIFT_CERTIFICATE_3.getId())).thenReturn(Optional.of(GIFT_CERTIFICATE_3));
+        Mockito.when(certificateDataUpdater.updateData(GIFT_CERTIFICATE_3, NEW_DATA_CERTIFICATE)).thenReturn(BEFORE_UPDATE_CERTIFICATE);
+        Mockito.when(certificateDao.update(BEFORE_UPDATE_CERTIFICATE)).thenReturn(BEFORE_UPDATE_CERTIFICATE);
+        GiftCertificate actual = certificateService.update(GIFT_CERTIFICATE_3.getId(), NEW_DATA_CERTIFICATE);
+        assertEquals(BEFORE_UPDATE_CERTIFICATE, actual);
+    }
+
+    @Test
+    void updateNotExistedEntity_thenThrowEx() {
+        Mockito.when(certificateDao.getById(GIFT_CERTIFICATE_3.getId())).thenReturn(Optional.empty());
+        assertThrows(NoSuchEntityException.class, () -> certificateService.update(
+                GIFT_CERTIFICATE_3.getId(),
+                NEW_DATA_CERTIFICATE)
+        );
+    }
+
+    @Test
+    void getByName_thenOk() {
+        Mockito.when(certificateDao.getByName(GIFT_CERTIFICATE_1.getName())).thenReturn(Optional.of(GIFT_CERTIFICATE_1));
+        GiftCertificate actual = certificateService.getByName(GIFT_CERTIFICATE_1.getName());
+        assertEquals(GIFT_CERTIFICATE_1, actual);
+    }
+
+    @Test
+    void getByNotExistedName_thenThrowEx() {
+        Mockito.when(certificateDao.getByName(NOT_EXISTED_NAME)).thenReturn(Optional.empty());
+        assertThrows(NoSuchEntityException.class, () -> certificateService.getByName(NOT_EXISTED_NAME));
     }
 }
