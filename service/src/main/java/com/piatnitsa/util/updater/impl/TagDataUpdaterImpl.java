@@ -20,7 +20,7 @@ public class TagDataUpdaterImpl implements DataUpdater<Tag> {
     }
 
     @Override
-    public void updateData(Tag updatableObject, Tag dataObject) {
+    public Tag updateData(Tag updatableObject, Tag dataObject) {
         throw new UnsupportedOperationException();
     }
 

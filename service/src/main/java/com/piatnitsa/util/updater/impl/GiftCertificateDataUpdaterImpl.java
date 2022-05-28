@@ -23,7 +23,7 @@ public class GiftCertificateDataUpdaterImpl implements DataUpdater<GiftCertifica
     }
 
     @Override
-    public void updateData(GiftCertificate updatableObject, GiftCertificate dataObject) {
+    public GiftCertificate updateData(GiftCertificate updatableObject, GiftCertificate dataObject) {
         String name = dataObject.getName();
         if (!Objects.isNull(name)) {
             updatableObject.setName(name);
@@ -51,6 +51,7 @@ public class GiftCertificateDataUpdaterImpl implements DataUpdater<GiftCertifica
         }
 
         updatableObject.setLastUpdateDate(timestampHandler.getCurrentTimestamp());
+        return updatableObject;
     }
 
     @Override
