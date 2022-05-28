@@ -69,7 +69,7 @@ public class GiftCertificateServiceImpl
         }
         GiftCertificate currentCertificate = optionalGiftCertificate.get();
         currentCertificate.setId(id);
-        certificateDataUpdater.updateData(currentCertificate, newDataCertificate);
+        currentCertificate = certificateDataUpdater.updateData(currentCertificate, newDataCertificate);
         return certificateDao.update(currentCertificate);
     }
 
