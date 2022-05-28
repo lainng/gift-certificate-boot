@@ -13,8 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -53,10 +51,7 @@ public class GiftCertificateServiceImpl
         LocalDateTime currentTimestamp = timestampHandler.getCurrentTimestamp();
         entity.setCreateDate(currentTimestamp);
         entity.setLastUpdateDate(currentTimestamp);
-
-        List<Tag> newTags = new ArrayList<>(entity.getTags().size());
-        tagDataUpdater.updateDataList(newTags, entity.getTags());
-        entity.setTags(newTags);
+        entity.setTags(tagDataUpdater.updateDataList(entity.getTags()));
         return certificateDao.insert(entity);
     }
 

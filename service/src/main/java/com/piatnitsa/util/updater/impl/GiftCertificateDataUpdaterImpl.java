@@ -46,14 +46,15 @@ public class GiftCertificateDataUpdaterImpl implements DataUpdater<GiftCertifica
 
         List<Tag> tags = dataObject.getTags();
         if (!Objects.isNull(tags)) {
-            tagDataUpdater.updateDataList(updatableObject.getTags(), dataObject.getTags());
+            List<Tag> newTags = tagDataUpdater.updateDataList(tags);
+            updatableObject.setTags(newTags);
         }
 
         updatableObject.setLastUpdateDate(timestampHandler.getCurrentTimestamp());
     }
 
     @Override
-    public void updateDataList(List<Tag> updatableList, List<Tag> dataList) {
+    public List<GiftCertificate> updateDataList(List<GiftCertificate> dataList) {
         throw new UnsupportedOperationException();
     }
 }

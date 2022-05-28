@@ -6,6 +6,7 @@ import com.piatnitsa.util.updater.DataUpdater;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -24,11 +25,11 @@ public class TagDataUpdaterImpl implements DataUpdater<Tag> {
     }
 
     @Override
-    public void updateDataList(List<Tag> updatableList, List<Tag> dataList) {
+    public List<Tag> updateDataList(List<Tag> dataList) {
         if (dataList == null) {
-            return;
+            return null;
         }
-        updatableList.clear();
+        List<Tag> updatableList = new ArrayList<>(dataList.size());
         for (Tag tag : dataList) {
             Optional<Tag> tagFromDb = tagDao.getByName(tag.getName());
             if (tagFromDb.isPresent()) {
@@ -38,6 +39,7 @@ public class TagDataUpdaterImpl implements DataUpdater<Tag> {
                 updatableList.add(tag);
             }
         }
+        return updatableList;
     }
 
     private String capitalizeTagName(String tagName) {
