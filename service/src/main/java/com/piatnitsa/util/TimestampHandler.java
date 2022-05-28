@@ -1,6 +1,7 @@
 package com.piatnitsa.util;
 
 import com.piatnitsa.entity.GiftCertificate;
+import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
 
@@ -11,13 +12,15 @@ import java.time.LocalDateTime;
  * @version 1.0
  * @see GiftCertificate
  */
+
+@Component
 public class TimestampHandler {
 
     /**
      * Returns the current timestamp in ISO 8601 format.
      * @return current timestamp of string type.
      */
-    public static LocalDateTime getCurrentTimestamp() {
+    public LocalDateTime getCurrentTimestamp() {
         return LocalDateTime.now();
     }
 }

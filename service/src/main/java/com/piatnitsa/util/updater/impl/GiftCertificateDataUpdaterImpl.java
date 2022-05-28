@@ -14,10 +14,12 @@ import java.util.Objects;
 @Component
 public class GiftCertificateDataUpdaterImpl implements DataUpdater<GiftCertificate> {
     private final DataUpdater<Tag> tagDataUpdater;
+    private final TimestampHandler timestampHandler;
 
     @Autowired
-    public GiftCertificateDataUpdaterImpl(DataUpdater<Tag> tagDataUpdater) {
+    public GiftCertificateDataUpdaterImpl(DataUpdater<Tag> tagDataUpdater, TimestampHandler timestampHandler) {
         this.tagDataUpdater = tagDataUpdater;
+        this.timestampHandler = timestampHandler;
     }
 
     @Override
@@ -47,7 +49,7 @@ public class GiftCertificateDataUpdaterImpl implements DataUpdater<GiftCertifica
             tagDataUpdater.updateDataList(updatableObject.getTags(), dataObject.getTags());
         }
 
-        updatableObject.setLastUpdateDate(TimestampHandler.getCurrentTimestamp());
+        updatableObject.setLastUpdateDate(timestampHandler.getCurrentTimestamp());
     }
 
     @Override

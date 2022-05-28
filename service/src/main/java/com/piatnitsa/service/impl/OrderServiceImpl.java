@@ -28,14 +28,17 @@ public class OrderServiceImpl extends AbstractService<Order> implements OrderSer
     private final OrderDao orderDao;
     private final UserDao userDao;
     private final GiftCertificateDao giftCertificateDao;
+    private final TimestampHandler timestampHandler;
 
     public OrderServiceImpl(OrderDao orderDao,
                             UserDao userDao,
-                            GiftCertificateDao giftCertificateDao) {
+                            GiftCertificateDao giftCertificateDao,
+                            TimestampHandler timestampHandler) {
         super(orderDao);
         this.orderDao = orderDao;
         this.userDao = userDao;
         this.giftCertificateDao = giftCertificateDao;
+        this.timestampHandler = timestampHandler;
     }
 
     @Override
@@ -70,7 +73,7 @@ public class OrderServiceImpl extends AbstractService<Order> implements OrderSer
         entity.setUser(optionalUser.get());
 
         entity.setCost(optionalGiftCertificate.get().getPrice());
-        entity.setPurchaseTime(TimestampHandler.getCurrentTimestamp());
+        entity.setPurchaseTime(timestampHandler.getCurrentTimestamp());
         orderDao.insert(entity);
         return entity;
     }

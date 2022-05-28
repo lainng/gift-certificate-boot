@@ -24,15 +24,18 @@ public class GiftCertificateServiceImpl
     private final GiftCertificateDao certificateDao;
     private final DataUpdater<GiftCertificate> certificateDataUpdater;
     private final DataUpdater<Tag> tagDataUpdater;
+    private final TimestampHandler timestampHandler;
 
     @Autowired
     public GiftCertificateServiceImpl(GiftCertificateDao certificateDao,
                                       DataUpdater<GiftCertificate> certificateDataUpdater,
-                                      DataUpdater<Tag> tagDataUpdater) {
+                                      DataUpdater<Tag> tagDataUpdater,
+                                      TimestampHandler timestampHandler) {
         super(certificateDao);
         this.certificateDao = certificateDao;
         this.certificateDataUpdater = certificateDataUpdater;
         this.tagDataUpdater = tagDataUpdater;
+        this.timestampHandler = timestampHandler;
     }
 
     @Override
@@ -47,7 +50,7 @@ public class GiftCertificateServiceImpl
             throw new DuplicateEntityException(ExceptionMessageKey.GIFT_CERTIFICATE_EXIST);
         }
 
-        LocalDateTime currentTimestamp = TimestampHandler.getCurrentTimestamp();
+        LocalDateTime currentTimestamp = timestampHandler.getCurrentTimestamp();
         entity.setCreateDate(currentTimestamp);
         entity.setLastUpdateDate(currentTimestamp);
 
