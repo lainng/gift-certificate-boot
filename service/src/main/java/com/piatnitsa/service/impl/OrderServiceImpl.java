@@ -50,6 +50,12 @@ public class OrderServiceImpl extends AbstractService<Order> implements OrderSer
         if (messageHolder.hasMessages()) {
             throw new IncorrectParameterException(messageHolder);
         }
+
+        Optional<User> optionalUser = userDao.getById(userId);
+        if (!optionalUser.isPresent()) {
+            throw new NoSuchEntityException(ExceptionMessageKey.USER_NOT_FOUND);
+        }
+
         PageRequest pageRequest = PageRequest.of(page, size);
         return orderDao.findByUserId(userId, pageRequest);
     }
