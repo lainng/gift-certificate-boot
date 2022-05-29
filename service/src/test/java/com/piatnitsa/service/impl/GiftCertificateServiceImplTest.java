@@ -9,10 +9,9 @@ import com.piatnitsa.exception.NoSuchEntityException;
 import com.piatnitsa.util.TimestampHandler;
 import com.piatnitsa.util.updater.impl.GiftCertificateDataUpdaterImpl;
 import com.piatnitsa.util.updater.impl.TagDataUpdaterImpl;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.PageRequest;
@@ -33,13 +32,22 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 @ExtendWith(MockitoExtension.class)
 class GiftCertificateServiceImplTest {
 
-    @Mock GiftCertificateDaoImpl certificateDao;
-    @Mock TimestampHandler timestampHandler;
-    @Mock TagDataUpdaterImpl tagDataUpdater = Mockito.mock(TagDataUpdaterImpl.class);
-    @Mock GiftCertificateDataUpdaterImpl certificateDataUpdater = Mockito.mock(GiftCertificateDataUpdaterImpl.class);
+    GiftCertificateDaoImpl certificateDao = Mockito.mock(GiftCertificateDaoImpl.class);
+    TimestampHandler timestampHandler = Mockito.mock(TimestampHandler.class);
+    TagDataUpdaterImpl tagDataUpdater = Mockito.mock(TagDataUpdaterImpl.class);
+    GiftCertificateDataUpdaterImpl certificateDataUpdater = Mockito.mock(GiftCertificateDataUpdaterImpl.class);
 
-    @InjectMocks
     GiftCertificateServiceImpl certificateService;
+
+    @BeforeEach
+    void setUp() {
+        certificateService = new GiftCertificateServiceImpl(
+                certificateDao,
+                certificateDataUpdater,
+                tagDataUpdater,
+                timestampHandler
+        );
+    }
 
     private static final long NOT_EXISTED_ID = 999L;
     private final LocalDateTime UPDATED_DATE = LocalDateTime.parse("2019-10-20T07:20:15.156");
