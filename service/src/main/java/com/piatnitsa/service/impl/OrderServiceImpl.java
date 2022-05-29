@@ -18,6 +18,7 @@ import com.piatnitsa.validator.IdentifiableValidator;
 import com.piatnitsa.validator.OrderValidator;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Component;
+import org.springframework.util.MultiValueMap;
 
 import java.util.List;
 import java.util.Map;
@@ -76,5 +77,25 @@ public class OrderServiceImpl extends AbstractService<Order> implements OrderSer
         entity.setPurchaseTime(timestampHandler.getCurrentTimestamp());
         orderDao.insert(entity);
         return entity;
+    }
+
+    @Override
+    public Order getById(long id) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public List<Order> getAll(int page, int size) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public void removeById(long id) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public List<Order> doFilter(MultiValueMap<String, String> params, int page, int size) {
+        throw new UnsupportedOperationException();
     }
 }
