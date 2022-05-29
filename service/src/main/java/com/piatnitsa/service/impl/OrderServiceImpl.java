@@ -81,8 +81,7 @@ public class OrderServiceImpl extends AbstractService<Order> implements OrderSer
 
         entity.setCost(optionalGiftCertificate.get().getPrice());
         entity.setPurchaseTime(timestampHandler.getCurrentTimestamp());
-        orderDao.insert(entity);
-        return entity;
+        return orderDao.insert(entity);
     }
 
     @Override
