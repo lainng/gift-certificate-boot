@@ -35,8 +35,8 @@ class GiftCertificateServiceImplTest {
 
     @Mock GiftCertificateDaoImpl certificateDao;
     @Mock TimestampHandler timestampHandler;
-    @Mock TagDataUpdaterImpl tagDataUpdater;
-    @Mock GiftCertificateDataUpdaterImpl certificateDataUpdater;
+    @Mock TagDataUpdaterImpl tagDataUpdater = Mockito.mock(TagDataUpdaterImpl.class);
+    @Mock GiftCertificateDataUpdaterImpl certificateDataUpdater = Mockito.mock(GiftCertificateDataUpdaterImpl.class);
 
     @InjectMocks
     GiftCertificateServiceImpl certificateService;
@@ -75,7 +75,7 @@ class GiftCertificateServiceImplTest {
             LocalDateTime.parse("2019-10-20T07:20:15.156"), LocalDateTime.parse("2019-10-20T07:20:15.156"),
             Arrays.asList(new Tag(2, "tagName3"), new Tag(4, "tagName4")));
 
-    private final GiftCertificate NEW_DATA_CERTIFICATE = new GiftCertificate(3, "giftCertificate22",
+    private final GiftCertificate NEW_DATA_CERTIFICATE = new GiftCertificate(0, "giftCertificate22",
             "description22", new BigDecimal("9999.99"), 22,
             LocalDateTime.parse("2018-10-20T07:20:15.156"), LocalDateTime.parse("2018-10-20T07:20:15.156"),
             Collections.singletonList(new Tag(0, "tagName4")));
