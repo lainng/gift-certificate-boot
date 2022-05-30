@@ -40,7 +40,7 @@ class OrderValidatorTest {
     }
 
     @Test
-    void validateIncorrectOrder_thenHasException() {
+    void validateIncorrectOrder_thenHasExceptions() {
         ExceptionMessageHolder holder = OrderValidator.validate(INCORRECT_ORDER);
         assertTrue(holder.hasMessages());
 
@@ -50,7 +50,7 @@ class OrderValidatorTest {
     }
 
     @Test
-    void validateOrderWithIncorrectUserId_thenHasException() {
+    void validateOrderWithIncorrectUserId_thenHasExceptions() {
         ExceptionMessageHolder holder = OrderValidator.validate(ORDER_INCORRECT_USER);
         assertTrue(holder.hasMessages());
 
@@ -59,7 +59,7 @@ class OrderValidatorTest {
     }
 
     @Test
-    void validateOrderWithIncorrectCertificateId_thenHasException() {
+    void validateOrderWithIncorrectCertificateId_thenHasExceptions() {
         ExceptionMessageHolder holder = OrderValidator.validate(ORDER_INCORRECT_CERTIFICATE);
         assertTrue(holder.hasMessages());
 
