@@ -51,23 +51,22 @@ public class GiftCertificateValidator {
      * @throws IncorrectParameterException if the entity contains incorrect field values.
      */
     public static ExceptionMessageHolder validateForUpdate(GiftCertificate item) {
-        ExceptionMessageHolder exMessage = new ExceptionMessageHolder();
-        IdentifiableValidator.validateId(item.getId());
+        ExceptionMessageHolder exMessages = IdentifiableValidator.validateId(item.getId());
 
         if (item.getName() != null) {
-            validateName(item.getName(), exMessage);
+            validateName(item.getName(), exMessages);
         }
         if (item.getDescription() != null) {
-            validateDescription(item.getDescription(), exMessage);
+            validateDescription(item.getDescription(), exMessages);
         }
         if (item.getPrice() != null) {
-            validatePrice(item.getPrice(), exMessage);
+            validatePrice(item.getPrice(), exMessages);
         }
         if (item.getDuration() != 0) {
-            validateDuration(item.getDuration(), exMessage);
+            validateDuration(item.getDuration(), exMessages);
         }
-        validateListOfTags(item.getTags(), exMessage);
-        return exMessage;
+        validateListOfTags(item.getTags(), exMessages);
+        return exMessages;
     }
 
     private static void validateListOfTags(List<Tag> tags, ExceptionMessageHolder messageHolder) {
