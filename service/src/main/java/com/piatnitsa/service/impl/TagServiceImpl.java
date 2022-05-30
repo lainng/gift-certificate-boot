@@ -32,8 +32,7 @@ public class TagServiceImpl extends AbstractService<Tag> implements TagService {
             throw new DuplicateEntityException(ExceptionMessageKey.TAG_EXIST);
         }
         entity.setName(capitalizeTagName(entity.getName()));
-        tagDao.insert(entity);
-        return entity;
+        return tagDao.insert(entity);
     }
 
     @Override
