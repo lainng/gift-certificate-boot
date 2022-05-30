@@ -34,7 +34,7 @@ class GiftCertificateDaoImplTest {
     private static final long NOT_EXISTED_ID = 999L;
     private static final String NOT_EXISTED_NAME = "not existed name";
     private static final String INCORRECT_FILTER_PARAM = "incorrectParameter";
-    private static final String INCORRECT_FILTER_VALUE = "incorrectParameterValue";
+    private static final String INCORRECT_FILTER_PARAM_VALUE = "incorrectParameterValue";
     private static final String PART_OF_CERTIFICATE_NAME = "giftCertificate";
     private static final String PART_OF_DESCRIPTION = "description";
     private static final String TAG_3_NAME = "tagName3";
@@ -97,7 +97,7 @@ class GiftCertificateDaoImplTest {
     @Test
     void getWithIncorrectFilter_thenReturnAll() {
         MultiValueMap<String, String> filterParams = new LinkedMultiValueMap<>();
-        filterParams.add(INCORRECT_FILTER_PARAM, INCORRECT_FILTER_VALUE);
+        filterParams.add(INCORRECT_FILTER_PARAM, INCORRECT_FILTER_PARAM_VALUE);
         List<GiftCertificate> expected = Arrays.asList(GIFT_CERTIFICATE_1, GIFT_CERTIFICATE_2, GIFT_CERTIFICATE_3);
         List<GiftCertificate> actual = certificateDao.getWithFilter(filterParams, pageRequest);
 

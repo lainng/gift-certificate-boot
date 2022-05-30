@@ -36,7 +36,7 @@ public class TagDaoImplTest {
     private static final String PART_OF_TAG_NAME = "tagName";
     private static final String NOT_EXISTED_NAME = "not existed name";
     private static final String INCORRECT_FILTER_PARAM = "incorrectParameter";
-    private static final String INCORRECT_FILTER_VALUE = "incorrectParameterValue";
+    private static final String INCORRECT_FILTER_PARAM_VALUE = "incorrectParameterValue";
     private static final String ASCENDING = "ASC";
     private final Pageable pageRequest = PageRequest.of(0, 5);
 
@@ -77,7 +77,7 @@ public class TagDaoImplTest {
     @Test
     void getWithIncorrectFilter_thenFetchAll() {
         MultiValueMap<String, String> filterParams = new LinkedMultiValueMap<>();
-        filterParams.add(INCORRECT_FILTER_PARAM, INCORRECT_FILTER_VALUE);
+        filterParams.add(INCORRECT_FILTER_PARAM, INCORRECT_FILTER_PARAM_VALUE);
 
         List<Tag> actual = tagDao.getWithFilter(filterParams, pageRequest);
         List<Tag> expected = Arrays.asList(TAG_1, TAG_2, TAG_3, TAG_4, TAG_5);
