@@ -17,7 +17,7 @@ public interface TagDao extends CRDDao<Tag>{
      * @param name entity name.
      * @return an {@link Tag} entity.
      */
-    Optional<Tag> getByName(String name);
-    Optional<Tag> getMostPopularTagWithHighestCostOfAllOrders();
+    Optional<Tag> findByName(String name);
+    Optional<Tag> findMostPopularTagWithHighestCostOfAllOrders();
 
 }

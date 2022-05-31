@@ -27,7 +27,7 @@ public class TagServiceImpl extends AbstractService<Tag> implements TagService {
         if (exceptionMessageHolder.hasMessages()) {
             throw new IncorrectParameterException(exceptionMessageHolder);
         }
-        boolean isTagExist = tagDao.getByName(entity.getName()).isPresent();
+        boolean isTagExist = tagDao.findByName(entity.getName()).isPresent();
         if (isTagExist) {
             throw new DuplicateEntityException(ExceptionMessageKey.TAG_EXIST);
         }
@@ -37,7 +37,7 @@ public class TagServiceImpl extends AbstractService<Tag> implements TagService {
 
     @Override
     public Tag getMostPopularTagWithHighestCostOfAllOrders() {
-        Optional<Tag> optionalTag = tagDao.getMostPopularTagWithHighestCostOfAllOrders();
+        Optional<Tag> optionalTag = tagDao.findMostPopularTagWithHighestCostOfAllOrders();
         if (!optionalTag.isPresent()) {
             throw new NoSuchEntityException(ExceptionMessageKey.TAG_NOT_FOUND);
         }

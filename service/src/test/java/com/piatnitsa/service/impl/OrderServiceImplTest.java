@@ -68,7 +68,7 @@ class OrderServiceImplTest {
     void getOrdersByUserId_thenOk() {
         PageRequest pageRequest = PageRequest.of(PAGE, SIZE);
         List<Order> expected = Arrays.asList(ORDER_1, ORDER_2);
-        Mockito.when(userDao.getById(USER_1.getId())).thenReturn(Optional.of(USER_1));
+        Mockito.when(userDao.findById(USER_1.getId())).thenReturn(Optional.of(USER_1));
         Mockito.when(orderDao.findByUserId(USER_1.getId(), pageRequest))
                 .thenReturn(expected);
         List<Order> actual = orderService.getOrdersByUserId(USER_1.getId(), PAGE, SIZE);
@@ -77,15 +77,15 @@ class OrderServiceImplTest {
 
     @Test
     void getOrdersByNotExistedUserId_thenOk() {
-        Mockito.when(userDao.getById(NOT_EXISTED_USER_ID)).thenReturn(Optional.empty());
+        Mockito.when(userDao.findById(NOT_EXISTED_USER_ID)).thenReturn(Optional.empty());
         assertThrows(NoSuchEntityException.class,
                 () -> orderService.getOrdersByUserId(NOT_EXISTED_USER_ID, PAGE, SIZE));
     }
 
     @Test
     void insert_thenOk() {
-        Mockito.when(userDao.getById(USER_1.getId())).thenReturn(Optional.of(USER_1));
-        Mockito.when(certificateDao.getById(GIFT_CERTIFICATE_2.getId())).thenReturn(Optional.of(GIFT_CERTIFICATE_2));
+        Mockito.when(userDao.findById(USER_1.getId())).thenReturn(Optional.of(USER_1));
+        Mockito.when(certificateDao.findById(GIFT_CERTIFICATE_2.getId())).thenReturn(Optional.of(GIFT_CERTIFICATE_2));
         Mockito.when(timestampHandler.getCurrentTimestamp()).thenReturn(UPDATED_DATE);
         Mockito.when(orderDao.insert(BEFORE_INSERT_ORDER)).thenReturn(ORDER_2);
         Order actual = orderService.insert(INSERT_ORDER);
@@ -94,14 +94,14 @@ class OrderServiceImplTest {
 
     @Test
     void insertWithNotExistedUser_thenThrow() {
-        Mockito.when(certificateDao.getById(GIFT_CERTIFICATE_2.getId())).thenReturn(Optional.of(GIFT_CERTIFICATE_2));
-        Mockito.when(userDao.getById(USER_1.getId())).thenReturn(Optional.empty());
+        Mockito.when(certificateDao.findById(GIFT_CERTIFICATE_2.getId())).thenReturn(Optional.of(GIFT_CERTIFICATE_2));
+        Mockito.when(userDao.findById(USER_1.getId())).thenReturn(Optional.empty());
         assertThrows(NoSuchEntityException.class, () -> orderService.insert(INSERT_ORDER));
     }
 
     @Test
     void insertWithNotExistedCertificate_thenThrow() {
-        Mockito.when(certificateDao.getById(GIFT_CERTIFICATE_2.getId())).thenReturn(Optional.empty());
+        Mockito.when(certificateDao.findById(GIFT_CERTIFICATE_2.getId())).thenReturn(Optional.empty());
         assertThrows(NoSuchEntityException.class, () -> orderService.insert(INSERT_ORDER));
     }
 }

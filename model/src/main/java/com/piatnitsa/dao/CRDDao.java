@@ -20,13 +20,13 @@ public interface CRDDao<T> {
      * @param id An ID of the object.
      * @return A {@link T} object.
      */
-    Optional<T> getById(long id);
+    Optional<T> findById(long id);
 
     /**
      * Retrieves a {@link List} of {@link T} objects.
      * @return A {@link List} of {@link T} objects.
      */
-    List<T> getAll(Pageable pageable);
+    List<T> findAll(Pageable pageable);
 
     /**
      * Method for saving an {@link T} entity.
@@ -46,5 +46,5 @@ public interface CRDDao<T> {
      * @param params request parameters from URL.
      * @return {@link List} of {@link T}.
      */
-    List<T> getWithFilter(MultiValueMap<String, String> params, Pageable pageable);
+    List<T> findWithFilter(MultiValueMap<String, String> params, Pageable pageable);
 }

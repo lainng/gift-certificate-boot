@@ -27,7 +27,7 @@ public class TagDaoImpl extends AbstractDao<Tag> implements TagDao {
     }
 
     @Override
-    public Optional<Tag> getByName(String name) {
+    public Optional<Tag> findByName(String name) {
         MultiValueMap<String, String> paramMap = new LinkedMultiValueMap<>();
         paramMap.add(FilterParameter.TAG_NAME, name);
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
@@ -38,7 +38,7 @@ public class TagDaoImpl extends AbstractDao<Tag> implements TagDao {
     }
 
     @Override
-    public Optional<Tag> getMostPopularTagWithHighestCostOfAllOrders() {
+    public Optional<Tag> findMostPopularTagWithHighestCostOfAllOrders() {
         return entityManager.createQuery(QUERY_SELECT_MOST_POPULAR_TAG, entityType)
                 .getResultStream()
                 .findFirst();

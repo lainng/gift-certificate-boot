@@ -31,7 +31,7 @@ public abstract class AbstractService<T> implements CRDService<T> {
     @Override
     public T getById(long id) {
         validateId(id);
-        Optional<T> entity = dao.getById(id);
+        Optional<T> entity = dao.findById(id);
         if (!entity.isPresent()) {
             throw new NoSuchEntityException(ExceptionMessageKey.NO_ENTITY);
         }
@@ -45,14 +45,14 @@ public abstract class AbstractService<T> implements CRDService<T> {
             throw new IncorrectParameterException(holder);
         }
         PageRequest pageRequest = PageRequest.of(page, size);
-        return dao.getAll(pageRequest);
+        return dao.findAll(pageRequest);
 
     }
 
     @Override
     public void removeById(long id) {
         validateId(id);
-        Optional<T> foundEntity = dao.getById(id);
+        Optional<T> foundEntity = dao.findById(id);
         if (!foundEntity.isPresent()) {
             throw new NoSuchEntityException(ExceptionMessageKey.NO_ENTITY);
         }
@@ -67,7 +67,7 @@ public abstract class AbstractService<T> implements CRDService<T> {
             throw new IncorrectParameterException(holder);
         }
         PageRequest pageRequest = PageRequest.of(page, size);
-        return dao.getWithFilter(params, pageRequest);
+        return dao.findWithFilter(params, pageRequest);
     }
 
     private void validateId(long id) {

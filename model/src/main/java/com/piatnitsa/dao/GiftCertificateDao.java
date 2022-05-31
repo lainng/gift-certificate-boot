@@ -12,6 +12,6 @@ import java.util.Optional;
  */
 public interface GiftCertificateDao extends CRUDDao<GiftCertificate> {
 
-    Optional<GiftCertificate> getByName(String name);
+    Optional<GiftCertificate> findByName(String name);
 
 }

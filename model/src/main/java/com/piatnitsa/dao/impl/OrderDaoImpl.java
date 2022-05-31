@@ -28,12 +28,12 @@ public class OrderDaoImpl extends AbstractDao<Order> implements OrderDao {
     }
 
     @Override
-    public Optional<Order> getById(long id) {
+    public Optional<Order> findById(long id) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public List<Order> getAll(Pageable pageable) {
+    public List<Order> findAll(Pageable pageable) {
         throw new UnsupportedOperationException();
     }
 
@@ -43,7 +43,7 @@ public class OrderDaoImpl extends AbstractDao<Order> implements OrderDao {
     }
 
     @Override
-    public List<Order> getWithFilter(MultiValueMap<String, String> params, Pageable pageable) {
+    public List<Order> findWithFilter(MultiValueMap<String, String> params, Pageable pageable) {
         throw new UnsupportedOperationException();
     }
 }

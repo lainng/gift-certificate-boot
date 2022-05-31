@@ -31,7 +31,7 @@ public class TagDataUpdaterImpl implements DataUpdater<Tag> {
         }
         List<Tag> updatableList = new ArrayList<>(dataList.size());
         for (Tag tag : dataList) {
-            Optional<Tag> tagFromDb = tagDao.getByName(tag.getName());
+            Optional<Tag> tagFromDb = tagDao.findByName(tag.getName());
             if (tagFromDb.isPresent()) {
                 updatableList.add(tagFromDb.get());
             } else {

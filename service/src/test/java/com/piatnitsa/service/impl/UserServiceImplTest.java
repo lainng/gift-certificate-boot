@@ -37,14 +37,14 @@ class UserServiceImplTest {
 
     @Test
     void getById_thenOk() {
-        Mockito.when(userDao.getById(USER_1.getId())).thenReturn(Optional.of(USER_1));
+        Mockito.when(userDao.findById(USER_1.getId())).thenReturn(Optional.of(USER_1));
         User actual = userService.getById(USER_1.getId());
         assertEquals(USER_1, actual);
     }
 
     @Test
     void getNotExistedById_thenThrowEx() {
-        Mockito.when(userDao.getById(NOT_EXISTED_ID)).thenReturn(Optional.empty());
+        Mockito.when(userDao.findById(NOT_EXISTED_ID)).thenReturn(Optional.empty());
         assertThrows(NoSuchEntityException.class, () -> userService.getById(NOT_EXISTED_ID));
     }
 
@@ -52,7 +52,7 @@ class UserServiceImplTest {
     void getAll_thenOk() {
         List<User> expected = Arrays.asList(USER_1, USER_2, USER_3);
         Pageable pageRequest = PageRequest.of(PAGE, SIZE);
-        Mockito.when(userDao.getAll(pageRequest)).thenReturn(expected);
+        Mockito.when(userDao.findAll(pageRequest)).thenReturn(expected);
 
         List<User> actual = userService.getAll(PAGE, SIZE);
         assertEquals(expected, actual);

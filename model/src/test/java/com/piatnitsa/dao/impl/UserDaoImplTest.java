@@ -35,20 +35,20 @@ class UserDaoImplTest {
     @Test
     void getById_thenOk() {
         Optional<User> expected = Optional.of(USER_1);
-        Optional<User> actual = userDao.getById(USER_1.getId());
+        Optional<User> actual = userDao.findById(USER_1.getId());
         assertEquals(expected, actual);
     }
 
     @Test
     void getByNotExistedId_thenReturnNull() {
-        Optional<User> actual = userDao.getById(NOT_EXISTED_ID);
+        Optional<User> actual = userDao.findById(NOT_EXISTED_ID);
         assertFalse(actual.isPresent());
     }
 
     @Test
     void getAll_thenOk() {
         List<User> expected = Arrays.asList(USER_1, USER_2);
-        List<User> actual = userDao.getAll(pageRequest);
+        List<User> actual = userDao.findAll(pageRequest);
         assertEquals(expected, actual);
     }
 }

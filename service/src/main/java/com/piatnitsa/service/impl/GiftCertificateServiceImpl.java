@@ -43,7 +43,7 @@ public class GiftCertificateServiceImpl
             throw new IncorrectParameterException(exceptionMessageHolder);
         }
 
-        boolean isGiftCertificateExist = certificateDao.getByName(entity.getName()).isPresent();
+        boolean isGiftCertificateExist = certificateDao.findByName(entity.getName()).isPresent();
         if (isGiftCertificateExist) {
             throw new DuplicateEntityException(ExceptionMessageKey.GIFT_CERTIFICATE_EXIST);
         }
@@ -63,7 +63,7 @@ public class GiftCertificateServiceImpl
             throw new IncorrectParameterException(exceptionMessageHolder);
         }
 
-        Optional<GiftCertificate> optionalGiftCertificate = certificateDao.getById(id);
+        Optional<GiftCertificate> optionalGiftCertificate = certificateDao.findById(id);
         if (!optionalGiftCertificate.isPresent()) {
             throw new NoSuchEntityException(ExceptionMessageKey.NO_ENTITY);
         }
@@ -81,7 +81,7 @@ public class GiftCertificateServiceImpl
             throw new IncorrectParameterException(holder);
         }
 
-        Optional<GiftCertificate> optionalGiftCertificate = certificateDao.getByName(name);
+        Optional<GiftCertificate> optionalGiftCertificate = certificateDao.findByName(name);
         if (!optionalGiftCertificate.isPresent()) {
             throw new NoSuchEntityException(ExceptionMessageKey.GIFT_CERTIFICATE_NOT_FOUND);
         }

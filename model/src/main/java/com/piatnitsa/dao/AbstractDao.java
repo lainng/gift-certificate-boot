@@ -33,12 +33,12 @@ public abstract class AbstractDao<T> implements CRDDao<T> {
     }
 
     @Override
-    public Optional<T> getById(long id) {
+    public Optional<T> findById(long id) {
         return Optional.ofNullable(entityManager.find(entityType, id));
     }
 
     @Override
-    public List<T> getAll(Pageable pageable) {
+    public List<T> findAll(Pageable pageable) {
         return entityManager.createQuery("select e from " + entityType.getSimpleName() + " e", entityType)
                 .setFirstResult((int) pageable.getOffset())
                 .setMaxResults(pageable.getPageSize())
@@ -60,7 +60,7 @@ public abstract class AbstractDao<T> implements CRDDao<T> {
     }
 
     @Override
-    public List<T> getWithFilter(MultiValueMap<String, String> params, Pageable pageable) {
+    public List<T> findWithFilter(MultiValueMap<String, String> params, Pageable pageable) {
         CriteriaQuery<T> criteriaQuery = queryCreator.createFilteringGetQuery(
                 params,
                 entityManager.getCriteriaBuilder()

@@ -26,7 +26,7 @@ public class GiftCertificateDaoImpl extends AbstractDao<GiftCertificate> impleme
     }
 
     @Override
-    public Optional<GiftCertificate> getByName(String name) {
+    public Optional<GiftCertificate> findByName(String name) {
         return entityManager.createQuery(SELECT_BY_NAME, GiftCertificate.class)
                 .setParameter("name", name)
                 .getResultStream()

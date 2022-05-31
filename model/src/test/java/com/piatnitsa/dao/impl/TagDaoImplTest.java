@@ -46,19 +46,19 @@ public class TagDaoImplTest {
     @Test
     void getById_thenOk() {
         Optional<Tag> expected = Optional.of(TAG_1);
-        Optional<Tag> actual = tagDao.getById(TAG_1.getId());
+        Optional<Tag> actual = tagDao.findById(TAG_1.getId());
         assertEquals(expected, actual);
     }
 
     @Test
     void getByNotExistedId_thenReturnNull() {
-        Optional<Tag> actual = tagDao.getById(NOT_EXISTED_ID);
+        Optional<Tag> actual = tagDao.findById(NOT_EXISTED_ID);
         assertFalse(actual.isPresent());
     }
 
     @Test
     void getAll_thenOk() {
-        List<Tag> actual = tagDao.getAll(pageRequest);
+        List<Tag> actual = tagDao.findAll(pageRequest);
         List<Tag> expected = Arrays.asList(TAG_1, TAG_2, TAG_3, TAG_4, TAG_5);
         assertEquals(expected, actual);
     }
@@ -69,7 +69,7 @@ public class TagDaoImplTest {
         filterParams.add(FilterParameter.TAG_NAME, PART_OF_TAG_NAME);
         filterParams.add(FilterParameter.SORT_BY_TAG_NAME, ASCENDING);
 
-        List<Tag> actual = tagDao.getWithFilter(filterParams, pageRequest);
+        List<Tag> actual = tagDao.findWithFilter(filterParams, pageRequest);
         List<Tag> expected = Arrays.asList(TAG_1, TAG_5, TAG_2, TAG_4, TAG_3);
         assertEquals(expected, actual);
     }
@@ -79,7 +79,7 @@ public class TagDaoImplTest {
         MultiValueMap<String, String> filterParams = new LinkedMultiValueMap<>();
         filterParams.add(INCORRECT_FILTER_PARAM, INCORRECT_FILTER_PARAM_VALUE);
 
-        List<Tag> actual = tagDao.getWithFilter(filterParams, pageRequest);
+        List<Tag> actual = tagDao.findWithFilter(filterParams, pageRequest);
         List<Tag> expected = Arrays.asList(TAG_1, TAG_2, TAG_3, TAG_4, TAG_5);
         assertEquals(expected, actual);
     }
@@ -87,20 +87,20 @@ public class TagDaoImplTest {
     @Test
     void getByName_thenOk() {
         Optional<Tag> expected = Optional.of(TAG_3);
-        Optional<Tag> actual = tagDao.getByName(TAG_3.getName());
+        Optional<Tag> actual = tagDao.findByName(TAG_3.getName());
         assertEquals(expected, actual);
     }
 
     @Test
     void getByNotExistedName_thenReturnNull() {
-        Optional<Tag> actual = tagDao.getByName(NOT_EXISTED_NAME);
+        Optional<Tag> actual = tagDao.findByName(NOT_EXISTED_NAME);
         assertFalse(actual.isPresent());
     }
 
     @Test
     void getMostPopularTagWithHighestCostOfAllOrders_thenOk() {
         Optional<Tag> expected = Optional.of(TAG_2);
-        Optional<Tag> actual = tagDao.getMostPopularTagWithHighestCostOfAllOrders();
+        Optional<Tag> actual = tagDao.findMostPopularTagWithHighestCostOfAllOrders();
         assertEquals(expected, actual);
     }
 }

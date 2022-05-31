@@ -39,8 +39,8 @@ class TagDataUpdaterImplTest {
 
     @Test
     void updateDataList_thenOk() {
-        Mockito.when(tagDao.getByName(NEW_TAG.getName())).thenReturn(Optional.empty());
-        Mockito.when(tagDao.getByName(OLD_TAG.getName())).thenReturn(Optional.of(OLD_TAG_FROM_DB));
+        Mockito.when(tagDao.findByName(NEW_TAG.getName())).thenReturn(Optional.empty());
+        Mockito.when(tagDao.findByName(OLD_TAG.getName())).thenReturn(Optional.of(OLD_TAG_FROM_DB));
         List<Tag> actual = tagDataUpdater.updateDataList(NEW_TAG_LIST);
         assertEquals(UPDATED_TAG_LIST, actual);
     }

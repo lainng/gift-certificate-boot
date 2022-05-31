@@ -63,20 +63,20 @@ class GiftCertificateDaoImplTest {
     @Test
     void getById_thenOk() {
         Optional<GiftCertificate> expected = Optional.of(GIFT_CERTIFICATE_1);
-        Optional<GiftCertificate> actual = certificateDao.getById(GIFT_CERTIFICATE_1.getId());
+        Optional<GiftCertificate> actual = certificateDao.findById(GIFT_CERTIFICATE_1.getId());
         assertEquals(expected, actual);
     }
 
     @Test
     void getByNotExistedId_thenReturnNull() {
-        Optional<GiftCertificate> actual = certificateDao.getById(NOT_EXISTED_ID);
+        Optional<GiftCertificate> actual = certificateDao.findById(NOT_EXISTED_ID);
         assertFalse(actual.isPresent());
     }
 
     @Test
     void getAll_thenOk() {
         List<GiftCertificate> expected = Arrays.asList(GIFT_CERTIFICATE_1, GIFT_CERTIFICATE_2, GIFT_CERTIFICATE_3);
-        List<GiftCertificate> actual = certificateDao.getAll(pageRequest);
+        List<GiftCertificate> actual = certificateDao.findAll(pageRequest);
         assertEquals(expected, actual);
     }
 
@@ -89,7 +89,7 @@ class GiftCertificateDaoImplTest {
         filterParams.add(FilterParameter.DATE_SORT, ASCENDING);
 
         List<GiftCertificate> expected = Arrays.asList(GIFT_CERTIFICATE_3, GIFT_CERTIFICATE_2);
-        List<GiftCertificate> actual = certificateDao.getWithFilter(filterParams, pageRequest);
+        List<GiftCertificate> actual = certificateDao.findWithFilter(filterParams, pageRequest);
 
         assertEquals(expected, actual);
     }
@@ -99,7 +99,7 @@ class GiftCertificateDaoImplTest {
         MultiValueMap<String, String> filterParams = new LinkedMultiValueMap<>();
         filterParams.add(INCORRECT_FILTER_PARAM, INCORRECT_FILTER_PARAM_VALUE);
         List<GiftCertificate> expected = Arrays.asList(GIFT_CERTIFICATE_1, GIFT_CERTIFICATE_2, GIFT_CERTIFICATE_3);
-        List<GiftCertificate> actual = certificateDao.getWithFilter(filterParams, pageRequest);
+        List<GiftCertificate> actual = certificateDao.findWithFilter(filterParams, pageRequest);
 
         assertEquals(expected, actual);
     }
@@ -107,13 +107,13 @@ class GiftCertificateDaoImplTest {
     @Test
     void getByName_thenOk() {
         Optional<GiftCertificate> expected = Optional.of(GIFT_CERTIFICATE_1);
-        Optional<GiftCertificate> actual = certificateDao.getByName(GIFT_CERTIFICATE_1.getName());
+        Optional<GiftCertificate> actual = certificateDao.findByName(GIFT_CERTIFICATE_1.getName());
         assertEquals(expected, actual);
     }
 
     @Test
     void getByNotExistedName_thenReturnNull() {
-        Optional<GiftCertificate> actual = certificateDao.getByName(NOT_EXISTED_NAME);
+        Optional<GiftCertificate> actual = certificateDao.findByName(NOT_EXISTED_NAME);
         assertFalse(actual.isPresent());
     }
 }

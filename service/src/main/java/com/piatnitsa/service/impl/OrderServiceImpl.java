@@ -51,7 +51,7 @@ public class OrderServiceImpl extends AbstractService<Order> implements OrderSer
             throw new IncorrectParameterException(messageHolder);
         }
 
-        Optional<User> optionalUser = userDao.getById(userId);
+        Optional<User> optionalUser = userDao.findById(userId);
         if (!optionalUser.isPresent()) {
             throw new NoSuchEntityException(ExceptionMessageKey.USER_NOT_FOUND);
         }
@@ -67,13 +67,13 @@ public class OrderServiceImpl extends AbstractService<Order> implements OrderSer
             throw new IncorrectParameterException(holder);
         }
 
-        Optional<GiftCertificate> optionalGiftCertificate = giftCertificateDao.getById(entity.getCertificate().getId());
+        Optional<GiftCertificate> optionalGiftCertificate = giftCertificateDao.findById(entity.getCertificate().getId());
         if (!optionalGiftCertificate.isPresent()) {
             throw new NoSuchEntityException(ExceptionMessageKey.GIFT_CERTIFICATE_NOT_FOUND);
         }
         entity.setCertificate(optionalGiftCertificate.get());
 
-        Optional<User> optionalUser = userDao.getById(entity.getUser().getId());
+        Optional<User> optionalUser = userDao.findById(entity.getUser().getId());
         if (!optionalUser.isPresent()) {
             throw new NoSuchEntityException(ExceptionMessageKey.USER_NOT_FOUND);
         }
