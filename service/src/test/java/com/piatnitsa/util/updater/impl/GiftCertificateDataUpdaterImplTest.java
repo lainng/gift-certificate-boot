@@ -69,7 +69,7 @@ class GiftCertificateDataUpdaterImplTest {
     }
 
     @Test
-    void updateDataList() {
+    void updateDataList_thenThrowEx() {
         assertThrows(UnsupportedOperationException.class,
                 () -> certificateDataUpdater.updateDataList(Collections.emptyList()));
     }
