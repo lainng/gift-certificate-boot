@@ -21,7 +21,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.MultiValueMap;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 @Component
@@ -45,8 +44,7 @@ public class OrderServiceImpl extends AbstractService<Order> implements OrderSer
     @Override
     public List<Order> getOrdersByUserId(long userId, int page, int size) {
         ExceptionMessageHolder messageHolder = IdentifiableValidator.validateId(userId);
-        Map<String, Object[]> messageMap = messageHolder.getMessages();
-        messageMap.putAll(FilterParameterValidator.validatePaginationParameters(page, size).getMessages());
+        messageHolder.putAll(FilterParameterValidator.validatePaginationParameters(page, size).getMessages());
         if (messageHolder.hasMessages()) {
             throw new IncorrectParameterException(messageHolder);
         }

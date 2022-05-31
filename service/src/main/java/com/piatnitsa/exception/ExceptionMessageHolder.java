@@ -8,10 +8,6 @@ public class ExceptionMessageHolder {
 
     public ExceptionMessageHolder() {}
 
-    public ExceptionMessageHolder(String exceptionMessageKey, Object... arguments) {
-        messages.put(exceptionMessageKey, arguments);
-    }
-
     public Map<String, Object[]> getMessages() {
         return messages;
     }
@@ -22,5 +18,9 @@ public class ExceptionMessageHolder {
 
     public boolean hasMessages() {
         return !messages.isEmpty();
+    }
+
+    public void putAll(Map<String, Object[]> exceptionMessages) {
+        messages.putAll(exceptionMessages);
     }
 }

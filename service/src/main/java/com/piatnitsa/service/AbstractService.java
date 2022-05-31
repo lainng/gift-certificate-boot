@@ -11,7 +11,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.util.MultiValueMap;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 /**
@@ -61,8 +60,7 @@ public abstract class AbstractService<T> implements CRDService<T> {
 
     public List<T> doFilter(MultiValueMap<String, String> params, int page, int size) {
         ExceptionMessageHolder holder = FilterParameterValidator.validateSortType(params);
-        Map<String, Object[]> messageMap = holder.getMessages();
-        messageMap.putAll(FilterParameterValidator.validatePaginationParameters(page, size).getMessages());
+        holder.putAll(FilterParameterValidator.validatePaginationParameters(page, size).getMessages());
         if (holder.hasMessages()) {
             throw new IncorrectParameterException(holder);
         }
