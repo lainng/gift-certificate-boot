@@ -5,6 +5,12 @@ import org.hibernate.envers.Audited;
 import javax.persistence.*;
 import java.util.Objects;
 
+/**
+ * This class represents user entity.
+ *
+ * @author Vlad Piatnitsa
+ * @version 1.0
+ */
 @Entity
 @Table(name = "`user`")
 @Audited

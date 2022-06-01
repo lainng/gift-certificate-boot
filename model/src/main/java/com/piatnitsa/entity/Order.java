@@ -7,6 +7,12 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
+/**
+ * This class represents order entity.
+ *
+ * @author Vlad Piatnitsa
+ * @version 1.0
+ */
 @Entity
 @Table(name = "`order`")
 @Audited
