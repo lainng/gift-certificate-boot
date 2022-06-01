@@ -1,7 +1,5 @@
 package com.piatnitsa.service;
 
-import com.piatnitsa.exception.IncorrectParameterException;
-
 /**
  * This interface describes CRUD operations for working with objects.
  * @param <T> type of entity.
@@ -14,7 +12,6 @@ public interface CRUDService<T> extends CRDService<T> {
      * Updates an {@link T} entity at data source.
      * @param id an ID of specified entity.
      * @param entity an updated entity.
-     * @throws IncorrectParameterException if the ID is not valid or the entity contains not valid data.
      */
     T update(long id, T entity);
 }

@@ -2,7 +2,6 @@ package com.piatnitsa.validator;
 
 import com.piatnitsa.exception.ExceptionMessageHolder;
 import com.piatnitsa.exception.ExceptionMessageKey;
-import com.piatnitsa.exception.IncorrectParameterException;
 import org.springframework.util.MultiValueMap;
 
 import java.util.List;
@@ -20,7 +19,8 @@ public class FilterParameterValidator {
     /**
      * Validates sort order types.
      * @param filterParams filtering parameters.
-     * @throws IncorrectParameterException if sort type not equal "asc" or "desc".
+     * @return the {@link ExceptionMessageHolder} object, which may contain the exception messages
+     * thrown during sort type validation or be empty if no exceptions were thrown.
      */
     public static ExceptionMessageHolder validateSortType(MultiValueMap<String, String> filterParams) {
         ExceptionMessageHolder holder = new ExceptionMessageHolder();
@@ -41,6 +41,13 @@ public class FilterParameterValidator {
         return holder;
     }
 
+    /**
+     * Validates pagination parameters.
+     * @param page page index.
+     * @param size the size of the page to be returned.
+     * @return the {@link ExceptionMessageHolder} object, which may contain the exception messages
+     * thrown during pagination parameters validation or be empty if no exceptions were thrown.
+     */
     public static ExceptionMessageHolder validatePaginationParameters(int page, int size) {
         ExceptionMessageHolder holder = new ExceptionMessageHolder();
         validatePage(page, holder);

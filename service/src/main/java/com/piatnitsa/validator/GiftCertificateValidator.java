@@ -4,7 +4,6 @@ import com.piatnitsa.entity.GiftCertificate;
 import com.piatnitsa.entity.Tag;
 import com.piatnitsa.exception.ExceptionMessageHolder;
 import com.piatnitsa.exception.ExceptionMessageKey;
-import com.piatnitsa.exception.IncorrectParameterException;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -31,7 +30,6 @@ public class GiftCertificateValidator {
      * @param item an {@link GiftCertificate} entity for validating.
      * @return the {@link ExceptionMessageHolder} object, which may contain the exception messages
      * thrown during {@link GiftCertificate} validation or be empty if no exceptions were thrown.
-     * @throws IncorrectParameterException if the entity contains incorrect field values.
      */
     public static ExceptionMessageHolder validate(GiftCertificate item) {
         ExceptionMessageHolder exMessage = new ExceptionMessageHolder();
@@ -48,7 +46,6 @@ public class GiftCertificateValidator {
      * @param item an {@link GiftCertificate} entity for validating.
      * @return the {@link ExceptionMessageHolder} object, which may contain the exception messages
      * thrown during {@link GiftCertificate} validation or be empty if no exceptions were thrown.
-     * @throws IncorrectParameterException if the entity contains incorrect field values.
      */
     public static ExceptionMessageHolder validateForUpdate(GiftCertificate item) {
         ExceptionMessageHolder exMessages = IdentifiableValidator.validateId(item.getId());
@@ -69,6 +66,19 @@ public class GiftCertificateValidator {
         return exMessages;
     }
 
+    /**
+     * Validates {@link GiftCertificate} name.
+     * @param name name to be validated.
+     * @param holder the {@link ExceptionMessageHolder} object, which may contain the exception messages
+     * thrown during {@link GiftCertificate} validation or be empty if no exceptions were thrown.
+     */
+    public static void validateName(String name, ExceptionMessageHolder holder) {
+        if (name == null
+                || name.length() < MIN_LENGTH_NAME || name.length() > MAX_LENGTH_NAME) {
+            holder.putException(ExceptionMessageKey.BAD_GIFT_CERTIFICATE_NAME, name);
+        }
+    }
+
     private static void validateListOfTags(List<Tag> tags, ExceptionMessageHolder messageHolder) {
         if (tags == null) return;
         int count = 0;
@@ -80,13 +90,6 @@ public class GiftCertificateValidator {
                 messageHolder.getMessages().put(updatedMsgKey, messages.get(ExceptionMessageKey.BAD_TAG_NAME));
                 count++;
             }
-        }
-    }
-
-    public static void validateName(String name, ExceptionMessageHolder exMessage) {
-        if (name == null
-                || name.length() < MIN_LENGTH_NAME || name.length() > MAX_LENGTH_NAME) {
-            exMessage.putException(ExceptionMessageKey.BAD_GIFT_CERTIFICATE_NAME, name);
         }
     }
 

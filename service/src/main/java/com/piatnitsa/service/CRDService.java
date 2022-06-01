@@ -1,7 +1,5 @@
 package com.piatnitsa.service;
 
-import com.piatnitsa.exception.IncorrectParameterException;
-
 import java.util.List;
 
 /**
@@ -16,7 +14,6 @@ public interface CRDService<T> {
      * Retrieves a {@link T} object by its ID.
      * @param id An ID of the object.
      * @return A {@link T} object.
-     * @throws IncorrectParameterException if the ID is not valid.
      */
     T getById(long id);
 
@@ -29,14 +26,12 @@ public interface CRDService<T> {
     /**
      * Method for saving an {@link T} entity
      * @param entity an {@link T} entity to save.
-     * @throws IncorrectParameterException if the {@link T} entity contains not valid data.
      */
     T insert(T entity);
 
     /**
      * Removes an {@link T} entity from data source by its ID.
      * @param id an ID of {@link T} entity.
-     * @throws IncorrectParameterException if the ID is not valid.
      */
     void removeById(long id);
 }

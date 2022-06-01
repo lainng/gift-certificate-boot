@@ -1,5 +1,10 @@
 package com.piatnitsa.exception;
 
+/**
+ * This class represents the exception that is thrown when an entity already exists in the database.
+ * @author Vlad Piatnitsa
+ * @version 1.0
+ */
 public class DuplicateEntityException extends RuntimeException{
 
     public DuplicateEntityException() {

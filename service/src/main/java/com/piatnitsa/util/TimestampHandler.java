@@ -18,7 +18,7 @@ public class TimestampHandler {
 
     /**
      * Returns the current timestamp in ISO 8601 format.
-     * @return current timestamp of string type.
+     * @return current timestamp.
      */
     public LocalDateTime getCurrentTimestamp() {
         return LocalDateTime.now();

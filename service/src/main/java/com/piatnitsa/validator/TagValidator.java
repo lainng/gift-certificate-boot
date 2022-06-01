@@ -3,7 +3,6 @@ package com.piatnitsa.validator;
 import com.piatnitsa.entity.Tag;
 import com.piatnitsa.exception.ExceptionMessageHolder;
 import com.piatnitsa.exception.ExceptionMessageKey;
-import com.piatnitsa.exception.IncorrectParameterException;
 
 /**
  * This class provides a validator for {@link Tag} entity.
@@ -19,7 +18,6 @@ public class TagValidator {
      * @param item a {@link Tag} entity for validating.
      * @return the {@link ExceptionMessageHolder} object, which may contain the exception messages thrown during {@link Tag} validation
      * or be empty if no exceptions were thrown.
-     * @throws IncorrectParameterException if the entity contains incorrect fields.
      */
     public static ExceptionMessageHolder validate(Tag item) {
         return validateName(item.getName());
@@ -30,7 +28,6 @@ public class TagValidator {
      * @param name a {@link Tag} name.
      * @return the {@link ExceptionMessageHolder} object, which may contain the exception messages thrown during {@link Tag} validation
      * or be empty if no exceptions were thrown.
-     * @throws IncorrectParameterException if name contains incorrect value.
      */
     public static ExceptionMessageHolder validateName(String name) {
         ExceptionMessageHolder exMessage = new ExceptionMessageHolder();

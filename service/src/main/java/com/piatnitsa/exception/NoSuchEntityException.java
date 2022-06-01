@@ -1,5 +1,10 @@
 package com.piatnitsa.exception;
 
+/**
+ * This class represents the exception that is thrown when entity does not found in the database.
+ * @author Vlad Piatnitsa
+ * @version 1.0
+ */
 public class NoSuchEntityException extends RuntimeException {
     public NoSuchEntityException() {
     }
