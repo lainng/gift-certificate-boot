@@ -18,6 +18,14 @@ import java.util.stream.Collectors;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
+/**
+ * This class is an endpoint of the API which allows to perform CREATE and READ operations on orders.
+ * Annotated by {@link RestController} with no parameters to provide an answer in application/json.
+ * Annotated by {@link RequestMapping} with parameter value = "/orders".
+ * So that {@code OrderController} is accessed by sending request to /orders.
+ * @author Vlad Piatnitsa
+ * @version 1.0
+ */
 @RestController
 @RequestMapping("/orders")
 public class OrderController {
@@ -35,6 +43,13 @@ public class OrderController {
         this.orderLinkBuilder = orderLinkBuilder;
     }
 
+    /**
+     * Returns a {@link List} of {@link Order} entities by specified {@link com.piatnitsa.entity.User} ID.
+     * @param userId ID of user.
+     * @param page page index. Default value - 0.
+     * @param size the size of the page to be returned. Default value - 5.
+     * @return a {@link List} of {@link Order} entities with HATEOAS.
+     */
     @GetMapping("/users/{userId}")
     @ResponseStatus(HttpStatus.OK)
     public CollectionModel<OrderDto> ordersByUserId(
@@ -49,6 +64,11 @@ public class OrderController {
         return CollectionModel.of(orders, link);
     }
 
+    /**
+     * Creates a new {@link Order} entity.
+     * @param orderCreationDto DTO which contains the certificate and user IDs.
+     * @return created {@link Order} entity with HATEOAS.
+     */
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public OrderDto createOrder(@RequestBody OrderCreationDto orderCreationDto) {

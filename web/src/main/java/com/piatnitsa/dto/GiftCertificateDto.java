@@ -5,7 +5,13 @@ import org.springframework.hateoas.RepresentationModel;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
 
+/**
+ * This class represents data transfer object of {@link com.piatnitsa.entity.GiftCertificate} entity.
+ * @author Vlad Piatnitsa
+ * @version 1.0
+ */
 public class GiftCertificateDto extends RepresentationModel<GiftCertificateDto> {
 
     private long id;
@@ -79,5 +85,41 @@ public class GiftCertificateDto extends RepresentationModel<GiftCertificateDto> 
 
     public void setTags(List<TagDto> tags) {
         this.tags = tags;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
+        GiftCertificateDto dto = (GiftCertificateDto) o;
+        return id == dto.id
+                && duration == dto.duration
+                && Objects.equals(name, dto.name)
+                && Objects.equals(description, dto.description)
+                && Objects.equals(price, dto.price)
+                && Objects.equals(createDate, dto.createDate)
+                && Objects.equals(lastUpdateDate, dto.lastUpdateDate)
+                && Objects.equals(tags, dto.tags);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), id, name, description, price, duration, createDate, lastUpdateDate, tags);
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder builder = new StringBuilder("GiftCertificateDto{");
+        builder.append("id=").append(id)
+                .append(", name='").append(name)
+                .append(", description='").append(description)
+                .append(", price=").append(price)
+                .append(", duration=").append(duration)
+                .append(", createDate=").append(createDate)
+                .append(", lastUpdateDate=").append(lastUpdateDate)
+                .append(", tags=").append(tags)
+                .append('}');
+        return builder.toString();
     }
 }

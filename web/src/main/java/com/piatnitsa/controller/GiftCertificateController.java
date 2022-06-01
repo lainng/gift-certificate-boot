@@ -3,7 +3,6 @@ package com.piatnitsa.controller;
 import com.piatnitsa.dto.GiftCertificateDto;
 import com.piatnitsa.dto.converter.DtoConverter;
 import com.piatnitsa.entity.GiftCertificate;
-import com.piatnitsa.exception.IncorrectParameterException;
 import com.piatnitsa.hateoas.LinkBuilder;
 import com.piatnitsa.service.GiftCertificateService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,8 +47,7 @@ public class GiftCertificateController {
     /**
      * Returns a {@link GiftCertificate} by its ID from data source.
      * @param id a {@link GiftCertificate} ID.
-     * @return a {@link GiftCertificate} entity.
-     * @throws IncorrectParameterException if specified ID is not valid.
+     * @return a {@link GiftCertificate} entity with HATEOAS.
      */
     @GetMapping("/{id}")
     public GiftCertificateDto certificateById(@PathVariable long id) {
@@ -61,7 +59,9 @@ public class GiftCertificateController {
 
     /**
      * Returns all {@link GiftCertificate} entities from data source.
-     * @return a {@link List} of {@link GiftCertificate} entities.
+     * @param page page index. Default value - 0.
+     * @param size the size of the page to be returned. Default value - 5.
+     * @return a {@link List} of {@link GiftCertificate} entities with HATEOAS.
      */
     @GetMapping
     public CollectionModel<GiftCertificateDto> allCertificates(
@@ -77,10 +77,9 @@ public class GiftCertificateController {
     }
 
     /**
-     * Creates a new {@link GiftCertificate} entity in data source.
+     * Creates a new {@link GiftCertificate} entity in the data source.
      * @param certificate a new {@link GiftCertificate} entity for saving.
-     * @return CREATED HttpStatus.
-     * @throws IncorrectParameterException if the {@link GiftCertificate} entity contains incorrect information.
+     * @return a new {@link GiftCertificate} entity with HATEOAS.
      */
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
@@ -95,7 +94,6 @@ public class GiftCertificateController {
      * Removes from data source a {@link GiftCertificate} by specified ID.
      * @param id a {@link GiftCertificate} ID.
      * @return NO_CONTENT HttpStatus
-     * @throws IncorrectParameterException if specified ID is not valid.
      */
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
@@ -108,8 +106,7 @@ public class GiftCertificateController {
      * Updates a {@link GiftCertificate} by specified ID.
      * @param id a {@link GiftCertificate} ID.
      * @param certificate a {@link GiftCertificate} that contains information for updating.
-     * @return CREATED HttpStatus
-     * @throws IncorrectParameterException if the {@link GiftCertificate} entity contains incorrect information.
+     * @return an updated {@link GiftCertificate} entity with HATEOAS.
      */
     @PatchMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
@@ -124,8 +121,7 @@ public class GiftCertificateController {
     /**
      * Returns a {@link List} of {@link GiftCertificate} from data source by special filter.
      * @param params request parameters which include the information needed for the search.
-     * @return a {@link List} of found {@link GiftCertificate} entities.
-     * @throws IncorrectParameterException if request parameters contains incorrect parameter values.
+     * @return a {@link List} of found {@link GiftCertificate} entities with HATEOAS.
      */
     @GetMapping("/filter")
     @ResponseStatus(HttpStatus.OK)

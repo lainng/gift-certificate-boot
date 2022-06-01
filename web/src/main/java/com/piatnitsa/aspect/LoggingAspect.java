@@ -8,6 +8,9 @@ import org.springframework.stereotype.Component;
 
 import java.util.Arrays;
 
+/**
+ * This class used to log the application.
+ */
 @Aspect
 @Component
 public class LoggingAspect {

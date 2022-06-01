@@ -17,6 +17,14 @@ import java.util.stream.Collectors;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
+/**
+ * This class is an endpoint of the API which allows to perform READ operations on users.
+ * Annotated by {@link RestController} with no parameters to provide an answer in application/json.
+ * Annotated by {@link RequestMapping} with parameter value = "/users".
+ * So that {@code UserController} is accessed by sending request to /users.
+ * @author Vlad Piatnitsa
+ * @version 1.0
+ */
 @RestController
 @RequestMapping("/users")
 public class UserController {
@@ -34,6 +42,12 @@ public class UserController {
         this.userDtoLinkBuilder = userDtoLinkBuilder;
     }
 
+    /**
+     * Returns all {@link User} entities from data source.
+     * @param page page index. Default value - 0.
+     * @param size the size of the page to be returned. Default value - 5.
+     * @return a {@link List} of {@link User} entities with HATEOAS.
+     */
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     public CollectionModel<UserDto> allUsers(
@@ -48,6 +62,11 @@ public class UserController {
         return CollectionModel.of(dtoList, selfLink);
     }
 
+    /**
+     * Returns {@link User} entity by specified ID.
+     * @param id ID of user.
+     * @return {@link User} entity with HATEOAS.
+     */
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     public UserDto userById(@PathVariable long id) {

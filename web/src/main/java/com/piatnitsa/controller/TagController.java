@@ -3,7 +3,6 @@ package com.piatnitsa.controller;
 import com.piatnitsa.dto.TagDto;
 import com.piatnitsa.dto.converter.DtoConverter;
 import com.piatnitsa.entity.Tag;
-import com.piatnitsa.exception.IncorrectParameterException;
 import com.piatnitsa.hateoas.LinkBuilder;
 import com.piatnitsa.service.TagService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,7 +46,9 @@ public class TagController {
 
     /**
      * Returns all {@link Tag} entities from data source.
-     * @return a {@link List} of {@link Tag} entities.
+     * @param page page index. Default value - 0.
+     * @param size the size of the page to be returned. Default value - 5.
+     * @return a {@link List} of {@link Tag} entities with HATEOAS.
      */
     @GetMapping
     public CollectionModel<TagDto> allTags(
@@ -65,8 +66,7 @@ public class TagController {
     /**
      * Returns a {@link Tag} by its ID from data source.
      * @param id a {@link Tag} ID.
-     * @return a {@link Tag} entity.
-     * @throws IncorrectParameterException if specified ID is not valid.
+     * @return a {@link Tag} entity with HATEOAS.
      */
     @GetMapping("/{id}")
     public TagDto tagById(@PathVariable long id) {
@@ -79,8 +79,7 @@ public class TagController {
     /**
      * Creates a new {@link Tag} entity in data source.
      * @param tag a new {@link Tag} entity for saving.
-     * @return CREATED HttpStatus.
-     * @throws IncorrectParameterException if the {@link Tag} entity contains incorrect information.
+     * @return a new {@link Tag} entity with HATEOAS.
      */
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
@@ -95,7 +94,6 @@ public class TagController {
      * Removes from data source a {@link Tag} by specified ID.
      * @param id a {@link Tag} ID.
      * @return NO_CONTENT HttpStatus
-     * @throws IncorrectParameterException if specified ID is not valid.
      */
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
@@ -107,8 +105,9 @@ public class TagController {
     /**
      * Returns a {@link List} of {@link Tag} from data source by special filter.
      * @param params request parameters which include the information needed for the search.
-     * @return a {@link List} of found {@link Tag} entities.
-     * @throws IncorrectParameterException if request parameters contains incorrect parameter values.
+     * @param page page index. Default value - 0.
+     * @param size the size of the page to be returned. Default value - 5.
+     * @return a {@link List} of found {@link Tag} entities with HATEOAS.
      */
     @GetMapping("/filter")
     @ResponseStatus(HttpStatus.OK)
@@ -125,6 +124,11 @@ public class TagController {
         return CollectionModel.of(dtoList, selfLink);
     }
 
+    /**
+     * Returns the most popular user {@link Tag} entity with the highest cost
+     * of all {@link com.piatnitsa.entity.Order} entities.
+     * @return the most popular user {@link Tag} entity with HATEOAS.
+     */
     @GetMapping("/popular")
     @ResponseStatus(HttpStatus.OK)
     public TagDto mostPopularUserTagWithHighestCostOfAllOrders() {
