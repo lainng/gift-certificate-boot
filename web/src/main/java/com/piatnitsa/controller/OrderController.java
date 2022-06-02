@@ -75,6 +75,9 @@ public class OrderController {
         Order order = orderService.insert(orderDtoConverter.toEntity(orderCreationDto));
         OrderDto orderDto = orderDtoConverter.toDto(order);
         orderLinkBuilder.buildLinks(orderDto);
+        orderDto.add(linkTo(methodOn(ORDER_CONTROLLER_CLASS)
+                .ordersByUserId(orderCreationDto.getUserId(), 0, 5)).withSelfRel()
+        );
         return orderDto;
     }
 }
