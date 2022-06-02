@@ -64,6 +64,7 @@ public abstract class AbstractService<T> implements CRDService<T> {
         if (holder.hasMessages()) {
             throw new IncorrectParameterException(holder);
         }
+        removeDuplicatePaginationParams(params);
         PageRequest pageRequest = PageRequest.of(page, size);
         return dao.findWithFilter(params, pageRequest);
     }
@@ -73,5 +74,10 @@ public abstract class AbstractService<T> implements CRDService<T> {
         if (messageHolder.hasMessages()) {
             throw new IncorrectParameterException(messageHolder);
         }
+    }
+
+    private void removeDuplicatePaginationParams(MultiValueMap<String, String> params) {
+        params.remove("page");
+        params.remove("size");
     }
 }
