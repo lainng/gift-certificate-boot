@@ -1,6 +1,5 @@
 package com.piatnitsa.dto;
 
-import com.piatnitsa.entity.User;
 import org.springframework.hateoas.RepresentationModel;
 
 import java.math.BigDecimal;
@@ -18,7 +17,7 @@ public class OrderDto extends RepresentationModel<OrderDto> {
     private BigDecimal cost;
     private LocalDateTime purchaseTime;
     private GiftCertificateDto certificate;
-    private User user;
+    private UserDto user;
 
     public long getId() {
         return id;
@@ -52,11 +51,11 @@ public class OrderDto extends RepresentationModel<OrderDto> {
         this.certificate = certificate;
     }
 
-    public User getUser() {
+    public UserDto getUser() {
         return user;
     }
 
-    public void setUser(User user) {
+    public void setUser(UserDto user) {
         this.user = user;
     }
 
