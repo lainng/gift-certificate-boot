@@ -3,7 +3,8 @@
 ### Module #3 - REST API Advanced
 
 This is a module that includes project migration from module #2 to Spring Boot.  
-[Module #2](https://github.com/lainng/gift-sertificate) - REST API Basics.
+[Module #2](https://github.com/lainng/gift-sertificate) - REST API Basics.  
+[Module #4](https://github.com/lainng/gift-certificate-security) - Authentication & Spring Security.
 
 ### *Task*
 
