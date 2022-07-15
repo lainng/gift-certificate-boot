@@ -1,8 +1,5 @@
 HELP.md
 target/
-.mvn
-mvnw.cmd
-mvnw
 **/target
 
 ### STS ###
